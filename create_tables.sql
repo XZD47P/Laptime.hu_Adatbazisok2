@@ -122,4 +122,45 @@ ALTER TABLE user_credential
 COMMENT ON TABLE webpage_admin.user_credential 
       IS 'Login credentials for users';
 
-                      
+
+CREATE TABLE race(
+       race_id              NUMBER          NOT NULL
+      ,motorsport_id        NUMBER          NOT NULL
+      ,title                VARCHAR2(255)   NOT NULL
+      ,layout_pic           VARCHAR2(255)   NOT NULL
+      ,country              VARCHAR2(50)    NOT NULL
+      ,race_date_start      DATE            NOT NULL
+      ,race_date_end        DATE            NOT NULL
+      ,air_temperature      NUMBER
+      ,asp_temperature      NUMBER
+      ,wind_strength        NUMBER(5,2)
+      ,wind_direction       CHAR(2)
+      ,rain_percentage      NUMBER
+      ,record_time          NUMBER
+      ,modified_at          DATE            DEFAULT SYSDATE NOT NULL 
+      ,modified_by          varchar2(50)
+      ,created_at           DATE            DEFAULT SYSDATE NOT NULL  
+      ,created_by           varchar2(50)
+)TABLESPACE users;
+
+ALTER TABLE race
+      ADD CONSTRAINT race_pk PRIMARY KEY (race_id);
+      
+COMMENT ON TABLE webpage_admin.race
+      IS 'Race details for motorsport seasons'
+      
+      
+CREATE TABLE database_log(
+       log_id          NUMBER         NOT NULL
+      ,log_type        NUMBER         NOT NULL
+      ,message         VARCHAR2(255)  
+      ,api             VARCHAR2(50)
+      ,created_at      DATE            DEFAULT SYSDATE NOT NULL  
+      ,created_by      varchar2(50)
+)TABLESPACE users;                      
+
+ALTER TABLE database_log
+      ADD CONSTRAINT adatabase_log_pk PRIMARY KEY (log_id);
+      
+COMMENT ON TABLE webpage_admin.race
+      IS 'History and changes in the database'
