@@ -147,7 +147,7 @@ ALTER TABLE race
       ADD CONSTRAINT race_pk PRIMARY KEY (race_id);
       
 COMMENT ON TABLE webpage_admin.race
-      IS 'Race details for motorsport seasons'
+      IS 'Race details for motorsport seasons';
       
       
 CREATE TABLE database_log(
@@ -163,4 +163,19 @@ ALTER TABLE database_log
       ADD CONSTRAINT adatabase_log_pk PRIMARY KEY (log_id);
       
 COMMENT ON TABLE webpage_admin.race
-      IS 'History and changes in the database'
+      IS 'History and changes in the database';
+      
+      
+CREATE TABLE chatroom_messages(
+       message_id     NUMBER          NOT NULL
+      ,chatroom_id    NUMBER          NOT NULL
+      ,user_id        NUMBER          NOT NULL
+      ,message        VARCHAR2(2000)  NOT NULL
+      ,created_at     DATE            DEFAULT SYSDATE NOT NULL
+)TABLESPACE users;
+
+ALTER TABLE chatroom_messages
+      ADD CONSTRAINT chatroom_messages_pk PRIMARY KEY (message_id);
+      
+COMMENT ON TABLE webpage_admin.chatroom_messages
+        IS 'Messages sent by users in chatrooms'; 

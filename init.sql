@@ -198,8 +198,21 @@ ALTER TABLE race
       ADD CONSTRAINT race_pk PRIMARY KEY (race_id);
       
 COMMENT ON TABLE webpage_admin.race
-      IS 'Race details for motorsport seasons'
+      IS 'Race details for motorsport seasons';
+     
+CREATE TABLE chatroom_messages(
+       message_id     NUMBER          NOT NULL
+      ,chatroom_id    NUMBER          NOT NULL
+      ,user_id        NUMBER          NOT NULL
+      ,message        VARCHAR2(2000)  NOT NULL
+      ,created_at     DATE            DEFAULT SYSDATE NOT NULL
+)TABLESPACE users;
+
+ALTER TABLE chatroom_messages
+      ADD CONSTRAINT chatroom_messages_pk PRIMARY KEY (message_id);
       
+COMMENT ON TABLE webpage_admin.chatroom_messages
+        IS 'Messages sent by users in chatrooms'; 
       
 CREATE TABLE database_log(
        log_id          NUMBER         NOT NULL
@@ -214,7 +227,7 @@ ALTER TABLE database_log
       ADD CONSTRAINT adatabase_log_pk PRIMARY KEY (log_id);
       
 COMMENT ON TABLE webpage_admin.race
-      IS 'History and changes in the database'
+      IS 'History and changes in the database';
 
 PROMPT Tables created Successfully!
 
@@ -251,8 +264,29 @@ ALTER TABLE news_comment
       ADD CONSTRAINT news_comment_reg_user_fk FOREIGN KEY (u_id) REFERENCES reg_user(user_id)
       ADD CONSTRAINT news_comment_news_fk FOREIGN KEY (news_id) REFERENCES news(news_id);
       
+--chatroom_messages.user_id -> reg_user.user_id, chatroom_messages.chatroom_id -> 
+ALTER TABLE chatroom_messages
+      ADD CONSTRAINT reg_user_chatroom_msg_fk FOREIGN KEY (user_id) REFERENCES reg_user(user_id)
+      ADD CONSTRAINT chatroom_chatroom_msg_fk FOREIGN KEY (chatroom_id) REFERENCES chatroom(chatroom_id);
+      
 PROMPT Connections made Successfully!
 
 ----------------------------------
--- 4. Loading tables   --
+-- 4. Creating Sequences   --
+----------------------------------
+
+PROMPT Creating Sequences...
+
+CREATE SEQUENCE user_seq START WITH 1000;
+CREATE SEQUENCE news_seq START WITH 10000;
+CREATE SEQUENCE motorsport_seq START WITH 100;
+CREATE SEQUENCE chatroom_seq START WITH 10;
+CREATE SEQUENCE chatroom_msq_seq START WITH 200;
+CREATE SEQUENCE race_seq START WITH 11000;
+CREATE SEQUENCE comment_seq START WITH 2000;
+
+PROMPT Sequences Created!
+
+----------------------------------
+-- 5. Creating Triggers   --
 ----------------------------------
