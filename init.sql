@@ -290,3 +290,10 @@ PROMPT Sequences Created!
 ----------------------------------
 -- 5. Creating Triggers   --
 ----------------------------------
+
+-- Valamilyen oknál fogva nem tudom beilleszteni ide a trigger létrehozás
+-- A triggerek megtalálhatóak a 05_triggers.sql fájlba.
+
+----------------------------------
+-- 6. Loading Data   --
+----------------------------------
