@@ -109,7 +109,7 @@ COMMENT ON TABLE webpage_admin.chatroom
 CREATE TABLE user_credential(
        u_id       NUMBER         NOT NULL
       ,email      VARCHAR2(100)  NOT NULL
-      ,passoword  VARCHAR2(255)  NOT NULL
+      ,password   RAW(2000)      NOT NULL
       ,modified_at      DATE            DEFAULT SYSDATE NOT NULL 
       ,modified_by      varchar2(50)
       ,created_at       DATE            DEFAULT SYSDATE NOT NULL  
