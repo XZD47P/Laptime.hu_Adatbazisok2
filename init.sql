@@ -169,7 +169,8 @@ CREATE TABLE user_credential(
 ) TABLESPACE users;
 
 ALTER TABLE user_credential
-      ADD CONSTRAINT user_credential_pk PRIMARY KEY (u_id);
+      ADD CONSTRAINT user_credential_pk PRIMARY KEY (u_id)
+      ADD CONSTRAINT user_email_check CHECK (INSTR(email, '@') > 0);
       
 COMMENT ON TABLE webpage_admin.user_credential 
       IS 'Login credentials for users';

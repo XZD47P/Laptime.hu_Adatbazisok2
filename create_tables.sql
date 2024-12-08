@@ -1,7 +1,9 @@
 CREATE TABLE reg_user(
-       user_id         NUMBER NOT NULL
-      ,first_name      varchar2(30) NOT NULL
-      ,last_name       varchar2(30) NOT NULL
+       user_id         NUMBER         NOT NULL
+      ,first_name      varchar2(30)   NOT NULL
+      ,last_name       varchar2(30)   NOT NULL
+      ,email           VARCHAR2(100)  NOT NULL
+      ,password        RAW(2000)      NOT NULL
       ,fav_driver      varchar2(50)
       ,fav_team        varchar2(50)
       ,email_subscription NUMBER(1)
@@ -13,7 +15,8 @@ CREATE TABLE reg_user(
 ) TABLESPACE users;
 
 ALTER TABLE reg_user
-      ADD CONSTRAINT reg_user_pk PRIMARY KEY (user_id);
+      ADD CONSTRAINT reg_user_pk PRIMARY KEY (user_id)
+      ADD CONSTRAINT user_email_check CHECK (INSTR(email, '@') > 0);
      
 COMMENT ON TABLE webpage_admin.reg_user 
         IS 'Registered users of the webpage';
@@ -105,23 +108,6 @@ ALTER TABLE chatroom
 COMMENT ON TABLE webpage_admin.chatroom 
       IS 'Created chatrooms';
       
-      
-CREATE TABLE user_credential(
-       u_id       NUMBER         NOT NULL
-      ,email      VARCHAR2(100)  NOT NULL
-      ,password   RAW(2000)      NOT NULL
-      ,modified_at      DATE            DEFAULT SYSDATE NOT NULL 
-      ,modified_by      varchar2(50)
-      ,created_at       DATE            DEFAULT SYSDATE NOT NULL  
-      ,created_by       varchar2(50)
-) TABLESPACE users;
-
-ALTER TABLE user_credential
-      ADD CONSTRAINT user_credential_pk PRIMARY KEY (u_id);
-      
-COMMENT ON TABLE webpage_admin.user_credential 
-      IS 'Login credentials for users';
-
 
 CREATE TABLE race(
        race_id              NUMBER          NOT NULL
