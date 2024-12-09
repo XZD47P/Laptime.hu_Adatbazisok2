@@ -8,6 +8,8 @@ create or replace package pkg_user is
                          p_fav_team     IN VARCHAR2,
                          p_user_role    IN VARCHAR2,
                          p_email_subscription IN  NUMBER);
+                         
+       PROCEDURE delete_user(p_email IN VARCHAR2);
 
 end pkg_user;
 /
@@ -47,6 +49,31 @@ create or replace package body pkg_user is
              raise_application_error(-20001, 'User already registered!');    
        
        END add_user;
+       
+       
+       PROCEDURE delete_user(p_email IN VARCHAR2) IS
+       
+       v_count NUMBER;
+       BEGIN
+         SELECT COUNT(*)
+         INTO v_count
+         FROM reg_user
+         WHERE email=p_email;
+         
+         IF v_count=0
+           THEN
+             RAISE NO_DATA_FOUND;
+         END IF;
+         
+         DELETE FROM reg_user
+         WHERE email=p_email;
+         
+         COMMIT;
+         
+       EXCEPTION
+         WHEN NO_DATA_FOUND THEN
+           RAISE NO_DATA_FOUND;
+       END delete_user;  
 
 end pkg_user;
 /
