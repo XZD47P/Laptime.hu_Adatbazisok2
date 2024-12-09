@@ -15,6 +15,8 @@ create or replace package pkg_user is
                                  p_curr_password IN VARCHAR2,
                                  p_new_password IN VARCHAR2);
 
+       PROCEDURE add_fav_motorsport(p_email IN VARCHAR2,
+                                    p_motorsport IN VARCHAR2);
 end pkg_user;
 /
 create or replace package body pkg_user is
@@ -57,26 +59,14 @@ create or replace package body pkg_user is
        
        PROCEDURE delete_user(p_email IN VARCHAR2) IS
        
-       v_count NUMBER;
+      
        BEGIN
-         SELECT COUNT(*)
-         INTO v_count
-         FROM reg_user
-         WHERE email=p_email;
-         
-         IF v_count=0
-           THEN
-             RAISE NO_DATA_FOUND;
-         END IF;
+         user_exists(p_email => p_email);
          
          DELETE FROM reg_user
          WHERE email=p_email;
-         
          COMMIT;
-         
-       EXCEPTION
-         WHEN NO_DATA_FOUND THEN
-           RAISE NO_DATA_FOUND;
+    
        END delete_user;
        
        
@@ -84,20 +74,11 @@ create or replace package body pkg_user is
                                  p_curr_password IN VARCHAR2,
                                  p_new_password IN VARCHAR2)
                  IS
-       v_count NUMBER;
        v_password RAW(2000);
        v_enc_curr_passw RAW(2000);
        v_enc_new_passw  RAW(2000);       
        BEGIN
-         SELECT COUNT(*)
-         INTO v_count
-         FROM reg_user
-         WHERE email=p_email;
-         
-         IF v_count=0
-           THEN
-             RAISE NO_DATA_FOUND;
-         END IF;
+         user_exists(p_email => p_email);
          
          v_enc_curr_passw:= pkg_cipher.encrypt(p_plain_password => p_curr_password);
          
@@ -120,13 +101,36 @@ create or replace package body pkg_user is
               RAISE pkg_exception.incorrect_password;
          END IF;
          
-         
        EXCEPTION
-         WHEN NO_DATA_FOUND THEN
-           RAISE NO_DATA_FOUND;
          WHEN pkg_exception.incorrect_password THEN
            raise_application_error(-20002, 'Email address or password is not correct!');     
        END update_password;  
+
+       
+       PROCEDURE add_fav_motorsport(p_email IN VARCHAR2,
+                                    p_motorsport IN VARCHAR2)
+                 IS
+       v_u_id NUMBER;
+       v_m_id NUMBER;
+       BEGIN
+         user_exists(p_email => p_email);
+         motorsport_exists(p_motorsport_name => p_motorsport);
+
+         SELECT user_id
+         INTO v_u_id
+         FROM reg_user
+         WHERE email=p_email;
+         
+         SELECT motorsport_id
+         INTO v_m_id
+         FROM motorsport
+         WHERE motorsport_name=LOWER(p_motorsport);
+
+         INSERT INTO favored_motorsport(u_id,motorsport_id)
+         VALUES (v_u_id,v_m_id);
+         COMMIT;
+         
+       END add_fav_motorsport;
 
 end pkg_user;
 /
