@@ -24,7 +24,7 @@ COMMENT ON TABLE webpage_admin.reg_user
 
 CREATE TABLE motorsport(
        motorsport_id   NUMBER   NOT NULL
-      ,motorport_name  varchar2(20) NOT NULL
+      ,motorsport_name  varchar2(20) NOT NULL
       ,modified_at     DATE         DEFAULT SYSDATE NOT NULL 
       ,modified_by     varchar2(50)
       ,created_at      DATE         DEFAULT SYSDATE NOT NULL  
