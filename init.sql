@@ -59,7 +59,7 @@ CREATE TABLE reg_user(
       ,fav_driver      varchar2(50)
       ,fav_team        varchar2(50)
       ,email_subscription NUMBER(1)
-      ,user_role       varchar2(10) DEFAULT 'user' 
+      ,user_role       varchar2(10) DEFAULT 'user' NOT NULL
       ,modified_at     DATE         DEFAULT SYSDATE NOT NULL 
       ,modified_by     varchar2(50)
       ,created_at      DATE         DEFAULT SYSDATE NOT NULL  

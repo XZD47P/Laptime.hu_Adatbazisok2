@@ -1,9 +1,9 @@
-create or replace package pkg_cryptor is
+create or replace package pkg_cipher is
 
        FUNCTION encrypt(p_plain_password VARCHAR2) RETURN RAW;
-end pkg_cryptor;
+end pkg_cipher;
 /
-create or replace package body pkg_cryptor is
+create or replace package body pkg_cipher is
 
        v_key   VARCHAR2 (2000) := 'hqx3rq9b96m6hytl';
        v_mod   NUMBER:=
@@ -22,5 +22,5 @@ create or replace package body pkg_cryptor is
          
          RETURN p_enc;
        END encrypt;
-end pkg_cryptor;
+end pkg_cipher;
 /

@@ -7,6 +7,11 @@ BEGIN
   THEN
     :new.user_id := user_seq.nextval;
   END IF;
+  
+  IF :new.user_role IS NULL
+    THEN
+      :new.user_role:= 'user';
+  END IF;
 END reg_user_trg;
 /
 CREATE OR REPLACE TRIGGER news_trg
