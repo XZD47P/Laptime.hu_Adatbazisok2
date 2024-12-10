@@ -23,5 +23,8 @@ create or replace package pkg_exception is
        
        chatroom_already_exists EXCEPTION;
        PRAGMA EXCEPTION_INIT(chatroom_already_exists, -20008);
+       
+       chatroom_not_found EXCEPTION;
+       PRAGMA EXCEPTION_INIT(chatroom_not_found, -20009);
 end pkg_exception;
 /
