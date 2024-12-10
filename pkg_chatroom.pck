@@ -72,7 +72,7 @@ create or replace package body pkg_chatroom is
         WHERE chatroom_name=p_name AND motorsport_category=v_m_id;
         COMMIT;
         
-        dbms_output.put_line('Chatromm deleted successfully!');
+        dbms_output.put_line('Chatroom deleted successfully!');
         EXCEPTION
           WHEN pkg_exception.chatroom_not_found THEN
             raise_application_error(-20009, 'Chatroom not found!');
