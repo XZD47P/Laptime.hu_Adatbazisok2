@@ -10,6 +10,7 @@ create or replace package body pkg_chatroom is
                              p_motorsport IN VARCHAR2)
                              IS
       v_m_id NUMBER;
+      v_count NUMBER;
       BEGIN
         motorsport_exists(p_motorsport_name => p_motorsport);
         
@@ -18,6 +19,16 @@ create or replace package body pkg_chatroom is
         FROM motorsport
         WHERE motorsport_name=p_motorsport;
         
+        SELECT COUNT(*)
+        INTO v_count
+        FROM chatroom
+        WHERE chatroom_name=p_name AND motorsport_category=v_m_id;
+        
+        IF v_count>0
+          THEN
+            RAISE pkg_exception.chatroom_already_exists;
+        END IF;
+        
         INSERT INTO chatroom(chatroom_name,motorsport_category)
         VALUES (p_name,v_m_id);
         COMMIT;
@@ -25,7 +36,9 @@ create or replace package body pkg_chatroom is
         dbms_output.put_line('Chatroom successfully created!');
       EXCEPTION
         WHEN pkg_exception.motorsport_not_found THEN
-              raise_application_error(-20004, 'Motorsport not found!');     
+              raise_application_error(-20004, 'Motorsport not found!');
+        WHEN pkg_exception.chatroom_already_exists THEN
+              raise_application_error(-20008, 'Chatroom already exists with these details!');     
    END create_chatroom;    
 
 end pkg_chatroom;
