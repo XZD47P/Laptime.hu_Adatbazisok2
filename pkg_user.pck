@@ -154,6 +154,10 @@ create or replace package body pkg_user is
        BEGIN
          user_exists(p_email => p_email);
          
+         UPDATE reg_user
+         SET user_role=p_role
+         WHERE email=p_email;
+         
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
               raise_application_error(-20005,'User not found');  
