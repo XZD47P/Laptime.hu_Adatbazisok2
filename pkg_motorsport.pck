@@ -24,8 +24,9 @@ create or replace package body pkg_motorsport is
        
          INSERT INTO motorsport(motorsport_name)
          VALUES (LOWER(p_name));
-         
          COMMIT;
+         
+         dbms_output.put_line('Motorsport added successfully!');
        EXCEPTION
          WHEN pkg_exception.motorsport_already_exists THEN
            raise_application_error(-20003, 'Motorsport is already on the list!');  
@@ -49,6 +50,7 @@ create or replace package body pkg_motorsport is
          DELETE FROM motorsport
          WHERE motorsport_name=LOWER(p_name);
          
+         dbms_output.put_line('Motorsport deleted successfully!');
        EXCEPTION
          WHEN NO_DATA_FOUND THEN
            RAISE NO_DATA_FOUND;  

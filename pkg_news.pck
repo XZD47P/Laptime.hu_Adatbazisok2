@@ -37,6 +37,7 @@ create or replace package body pkg_news is
          VALUES(v_u_id,v_m_id,p_title,to_clob(p_description));
          COMMIT;
          
+         dbms_output.put_line('News added successfully! Please publish it, if you want others to see!');
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
               raise_application_error(-20005,'User not found');
@@ -80,6 +81,7 @@ create or replace package body pkg_news is
          WHERE u_id=v_u_id AND motorsport_category=v_m_id AND title=p_title;
          COMMIT;
          
+         dbms_output.put_line('News deleted successfully!');
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
               raise_application_error(-20005,'User not found');

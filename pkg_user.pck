@@ -58,6 +58,7 @@ create or replace package body pkg_user is
          VALUES (p_first_name,p_last_name,p_email,v_enc_pass,p_fav_driver,p_fav_team,p_user_role,p_email_subscription);
          COMMIT;
          
+         dbms_output.put_line('User added successfully!');
        EXCEPTION
          WHEN pkg_exception.user_already_exists THEN
              raise_application_error(-20001, 'User already registered!');    
@@ -74,6 +75,7 @@ create or replace package body pkg_user is
          WHERE email=p_email;
          COMMIT;
        
+       dbms_output.put_line('User deleted successfully!');
        EXCEPTION
        WHEN pkg_exception.user_not_found THEN
               raise_application_error(-20005,'User not found');
@@ -111,6 +113,7 @@ create or replace package body pkg_user is
               RAISE pkg_exception.incorrect_password;
          END IF;
          
+         dbms_output.put_line('Password updated successfully!');
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
               raise_application_error(-20005,'User not found');
@@ -129,7 +132,9 @@ create or replace package body pkg_user is
          UPDATE reg_user
          SET user_role=p_role
          WHERE email=p_email;
+         COMMIT;
          
+         dbms_output.put_line('User role changed successfully!');
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
               raise_application_error(-20005,'User not found');  
@@ -159,6 +164,7 @@ create or replace package body pkg_user is
          VALUES (v_u_id,v_m_id);
          COMMIT;
        
+       dbms_output.put_line('Favorite motorsport added to user!');
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
               raise_application_error(-20005,'User not found');
@@ -200,7 +206,8 @@ create or replace package body pkg_user is
          DELETE FROM favored_motorsport
          WHERE u_id=v_u_id AND motorsport_id=v_m_id;
          COMMIT;
-         
+       
+       dbms_output.put_line('Favorite motorsport deleted from user!');  
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
               raise_application_error(-20005,'User not found');
