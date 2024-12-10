@@ -17,5 +17,8 @@ create or replace package pkg_exception is
        
        user_not_favourite_motorsport EXCEPTION;
        PRAGMA EXCEPTION_INIT(user_not_favourite_motorsport, -20006);
+       
+       news_not_found EXCEPTION;
+       PRAGMA EXCEPTION_INIT(news_not_found, -20007);
 end pkg_exception;
 /
