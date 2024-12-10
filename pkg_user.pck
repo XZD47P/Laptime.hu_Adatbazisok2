@@ -21,6 +21,9 @@ create or replace package pkg_user is
        PROCEDURE add_fav_motorsport(p_email IN VARCHAR2,
                                     p_motorsport IN VARCHAR2);
                                     
+       PROCEDURE delete_fav_motorsport(p_email IN VARCHAR2,
+                                       p_motorsport IN VARCHAR2);
+                                    
        
 end pkg_user;
 /
@@ -160,9 +163,51 @@ create or replace package body pkg_user is
          WHEN pkg_exception.user_not_found THEN
               raise_application_error(-20005,'User not found');
          WHEN pkg_exception.motorsport_not_found THEN
-    raise_application_error(-20004, 'Motorsport not found!');  
+              raise_application_error(-20004, 'Motorsport not found!');  
        END add_fav_motorsport;
 
+       PROCEDURE delete_fav_motorsport(p_email IN VARCHAR2,
+                                       p_motorsport IN VARCHAR2)
+                 IS
+       v_u_id NUMBER;
+       v_m_id NUMBER;
+       v_fav_count NUMBER;                 
+       BEGIN
+         user_exists(p_email => p_email);
+         motorsport_exists(p_motorsport_name => p_motorsport);
+         
+         SELECT user_id
+         INTO v_u_id
+         FROM reg_user
+         WHERE email=p_email;
+         
+         SELECT motorsport_id
+         INTO v_m_id
+         FROM motorsport
+         WHERE motorsport_name=LOWER(p_motorsport);
+         
+         SELECT COUNT(*)
+         INTO v_fav_count
+         FROM favored_motorsport
+         WHERE u_id=v_u_id AND motorsport_id=v_m_id;
+         
+         IF v_fav_count=0
+           THEN
+             RAISE pkg_exception.user_not_favourite_motorsport;
+         END IF;
+         
+         DELETE FROM favored_motorsport
+         WHERE u_id=v_u_id AND motorsport_id=v_m_id;
+         COMMIT;
+         
+       EXCEPTION
+         WHEN pkg_exception.user_not_found THEN
+              raise_application_error(-20005,'User not found');
+         WHEN pkg_exception.motorsport_not_found THEN
+              raise_application_error(-20004, 'Motorsport not found!');
+         WHEN pkg_exception.user_not_favourite_motorsport THEN
+              raise_application_error(-20006, 'User does not have this motorsport as favourite motorsport');
+       END delete_fav_motorsport;
 
 
   
