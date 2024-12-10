@@ -12,6 +12,8 @@ create or replace package pkg_news is
        PROCEDURE publish_news(p_email IN VARCHAR2,
                               p_motorsport IN VARCHAR2,
                               P_title IN VARCHAR2);
+                              
+
 end pkg_news;
 /
 create or replace package body pkg_news is
@@ -140,7 +142,7 @@ create or replace package body pkg_news is
               raise_application_error(-20004, 'Motorsport not found!');
          WHEN pkg_exception.news_not_found THEN
               raise_application_error(-20007,'News not found with these parameters!');  
-   END publish_news;               
-
+   END publish_news;
+                
 end pkg_news;
 /
