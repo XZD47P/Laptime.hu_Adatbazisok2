@@ -109,7 +109,7 @@ COMMENT ON TABLE webpage_admin.favored_motorsport
 CREATE TABLE news(
        news_id                NUMBER       NOT NULL
       ,u_id                   NUMBER       NOT NULL 
-      ,title                  varchar2(50) NOT NULL
+      ,title                  varchar2(255) NOT NULL
       ,news_description       NCLOB        NOT NULL
       ,motorsport_category    NUMBER       NOT NULL
       ,published              NUMBER(1)    DEFAULT 0 NOT NULL
