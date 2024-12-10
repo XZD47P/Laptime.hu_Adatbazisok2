@@ -11,8 +11,5 @@ begin
       RAISE pkg_exception.motorsport_not_found;
   END IF;
   
-EXCEPTION
-  WHEN pkg_exception.motorsport_not_found THEN
-    raise_application_error(-20004, 'Motorsport not found!');
 end motorsport_exists;
 /

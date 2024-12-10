@@ -11,8 +11,5 @@ begin
       RAISE pkg_exception.user_not_found;
   END IF;  
 
-EXCEPTION
-  WHEN pkg_exception.user_not_found THEN
-    raise_application_error(-20005,'User not found');
 end user_exists;
 /

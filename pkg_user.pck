@@ -17,6 +17,9 @@ create or replace package pkg_user is
 
        PROCEDURE add_fav_motorsport(p_email IN VARCHAR2,
                                     p_motorsport IN VARCHAR2);
+
+       PROCEDURE change_role(p_email IN varchar2,
+                             p_role  IN varchar2);
 end pkg_user;
 /
 create or replace package body pkg_user is
@@ -66,7 +69,10 @@ create or replace package body pkg_user is
          DELETE FROM reg_user
          WHERE email=p_email;
          COMMIT;
-    
+       
+       EXCEPTION
+       WHEN pkg_exception.user_not_found THEN
+              raise_application_error(-20005,'User not found');
        END delete_user;
        
        
@@ -102,6 +108,8 @@ create or replace package body pkg_user is
          END IF;
          
        EXCEPTION
+         WHEN pkg_exception.user_not_found THEN
+              raise_application_error(-20005,'User not found');
          WHEN pkg_exception.incorrect_password THEN
            raise_application_error(-20002, 'Email address or password is not correct!');     
        END update_password;  
@@ -129,8 +137,26 @@ create or replace package body pkg_user is
          INSERT INTO favored_motorsport(u_id,motorsport_id)
          VALUES (v_u_id,v_m_id);
          COMMIT;
-         
+       
+       EXCEPTION
+         WHEN pkg_exception.user_not_found THEN
+              raise_application_error(-20005,'User not found');
+         WHEN pkg_exception.motorsport_not_found THEN
+    raise_application_error(-20004, 'Motorsport not found!');  
        END add_fav_motorsport;
 
+
+
+       PROCEDURE change_role(p_email IN varchar2,
+                             p_role  IN varchar2)
+                 IS
+                 
+       BEGIN
+         user_exists(p_email => p_email);
+         
+       EXCEPTION
+         WHEN pkg_exception.user_not_found THEN
+              raise_application_error(-20005,'User not found');  
+       END change_role;      
 end pkg_user;
 /
