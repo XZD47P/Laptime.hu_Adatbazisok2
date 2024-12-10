@@ -14,12 +14,14 @@ create or replace package pkg_user is
        PROCEDURE update_password(p_email IN VARCHAR2,
                                  p_curr_password IN VARCHAR2,
                                  p_new_password IN VARCHAR2);
-
-       PROCEDURE add_fav_motorsport(p_email IN VARCHAR2,
-                                    p_motorsport IN VARCHAR2);
-
+       
        PROCEDURE change_role(p_email IN varchar2,
                              p_role  IN varchar2);
+      
+       PROCEDURE add_fav_motorsport(p_email IN VARCHAR2,
+                                    p_motorsport IN VARCHAR2);
+                                    
+       
 end pkg_user;
 /
 create or replace package body pkg_user is
@@ -114,7 +116,23 @@ create or replace package body pkg_user is
            raise_application_error(-20002, 'Email address or password is not correct!');     
        END update_password;  
 
-       
+       PROCEDURE change_role(p_email IN varchar2,
+                             p_role  IN varchar2)
+                 IS
+                 
+       BEGIN
+         user_exists(p_email => p_email);
+         
+         UPDATE reg_user
+         SET user_role=p_role
+         WHERE email=p_email;
+         
+       EXCEPTION
+         WHEN pkg_exception.user_not_found THEN
+              raise_application_error(-20005,'User not found');  
+       END change_role;           
+
+
        PROCEDURE add_fav_motorsport(p_email IN VARCHAR2,
                                     p_motorsport IN VARCHAR2)
                  IS
@@ -147,20 +165,6 @@ create or replace package body pkg_user is
 
 
 
-       PROCEDURE change_role(p_email IN varchar2,
-                             p_role  IN varchar2)
-                 IS
-                 
-       BEGIN
-         user_exists(p_email => p_email);
-         
-         UPDATE reg_user
-         SET user_role=p_role
-         WHERE email=p_email;
-         
-       EXCEPTION
-         WHEN pkg_exception.user_not_found THEN
-              raise_application_error(-20005,'User not found');  
-       END change_role;      
+  
 end pkg_user;
 /
