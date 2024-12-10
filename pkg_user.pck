@@ -29,15 +29,15 @@ end pkg_user;
 /
 create or replace package body pkg_user is
 
-       PROCEDURE add_user(p_first_name  IN VARCHAR2,
-                         p_last_name    IN VARCHAR2,
-                         p_email        IN VARCHAR2,
-                         p_password     IN VARCHAR2,
-                         p_fav_driver   IN VARCHAR2,
-                         p_fav_team     IN VARCHAR2,
-                         p_user_role    IN VARCHAR2,
-                         p_email_subscription IN  NUMBER)
-                         IS
+   PROCEDURE add_user(p_first_name  IN VARCHAR2,
+                      p_last_name    IN VARCHAR2,
+                      p_email        IN VARCHAR2,
+                      p_password     IN VARCHAR2,
+                      p_fav_driver   IN VARCHAR2,
+                      p_fav_team     IN VARCHAR2,
+                      p_user_role    IN VARCHAR2,
+                      p_email_subscription IN  NUMBER)
+                      IS
        v_count NUMBER;
        v_enc_pass RAW(2000);
        BEGIN
@@ -61,13 +61,12 @@ create or replace package body pkg_user is
        EXCEPTION
          WHEN pkg_exception.user_already_exists THEN
              raise_application_error(-20001, 'User already registered!');    
+    END add_user;
        
-       END add_user;
        
+   PROCEDURE delete_user(p_email IN VARCHAR2) 
+                         IS
        
-       PROCEDURE delete_user(p_email IN VARCHAR2) IS
-       
-      
        BEGIN
          user_exists(p_email => p_email);
          
@@ -78,13 +77,13 @@ create or replace package body pkg_user is
        EXCEPTION
        WHEN pkg_exception.user_not_found THEN
               raise_application_error(-20005,'User not found');
-       END delete_user;
+   END delete_user;
        
        
-       PROCEDURE update_password(p_email IN VARCHAR2,
-                                 p_curr_password IN VARCHAR2,
-                                 p_new_password IN VARCHAR2)
-                 IS
+   PROCEDURE update_password(p_email IN VARCHAR2,
+                             p_curr_password IN VARCHAR2,
+                             p_new_password IN VARCHAR2)
+                             IS
        v_password RAW(2000);
        v_enc_curr_passw RAW(2000);
        v_enc_new_passw  RAW(2000);       
@@ -117,11 +116,12 @@ create or replace package body pkg_user is
               raise_application_error(-20005,'User not found');
          WHEN pkg_exception.incorrect_password THEN
            raise_application_error(-20002, 'Email address or password is not correct!');     
-       END update_password;  
+   END update_password;
+         
 
-       PROCEDURE change_role(p_email IN varchar2,
-                             p_role  IN varchar2)
-                 IS
+   PROCEDURE change_role(p_email IN varchar2,
+                         p_role  IN varchar2)
+                         IS
                  
        BEGIN
          user_exists(p_email => p_email);
@@ -133,12 +133,12 @@ create or replace package body pkg_user is
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
               raise_application_error(-20005,'User not found');  
-       END change_role;           
+   END change_role;           
 
 
-       PROCEDURE add_fav_motorsport(p_email IN VARCHAR2,
-                                    p_motorsport IN VARCHAR2)
-                 IS
+   PROCEDURE add_fav_motorsport(p_email IN VARCHAR2,
+                                p_motorsport IN VARCHAR2)
+                                IS
        v_u_id NUMBER;
        v_m_id NUMBER;
        BEGIN
@@ -164,11 +164,12 @@ create or replace package body pkg_user is
               raise_application_error(-20005,'User not found');
          WHEN pkg_exception.motorsport_not_found THEN
               raise_application_error(-20004, 'Motorsport not found!');  
-       END add_fav_motorsport;
+   END add_fav_motorsport;
+       
 
-       PROCEDURE delete_fav_motorsport(p_email IN VARCHAR2,
-                                       p_motorsport IN VARCHAR2)
-                 IS
+   PROCEDURE delete_fav_motorsport(p_email IN VARCHAR2,
+                                   p_motorsport IN VARCHAR2)
+                                   IS
        v_u_id NUMBER;
        v_m_id NUMBER;
        v_fav_count NUMBER;                 
@@ -207,7 +208,7 @@ create or replace package body pkg_user is
               raise_application_error(-20004, 'Motorsport not found!');
          WHEN pkg_exception.user_not_favourite_motorsport THEN
               raise_application_error(-20006, 'User does not have this motorsport as favourite motorsport');
-       END delete_fav_motorsport;
+   END delete_fav_motorsport;
 
 
   
