@@ -29,5 +29,8 @@ create or replace package pkg_exception is
        
        wrong_number_format EXCEPTION;
        PRAGMA EXCEPTION_INIT(wrong_number_format,-20010);
+       
+       race_date_occupied EXCEPTION;
+       PRAGMA EXCEPTION_INIT(race_date_occupied, -20011);
 end pkg_exception;
 /

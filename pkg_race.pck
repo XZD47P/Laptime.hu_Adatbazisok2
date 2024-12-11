@@ -33,6 +33,7 @@ create or replace package body pkg_race is
                           p_rain_percent IN NUMBER)
                           IS
       v_m_id NUMBER;
+      v_count NUMBER;
       BEGIN
         motorsport_exists(p_motorsport_name => p_motorsport);
         
@@ -40,6 +41,17 @@ create or replace package body pkg_race is
         INTO v_m_id
         FROM motorsport
         WHERE motorsport_name=LOWER(p_motorsport);
+        
+        SELECT COUNT(*)
+        INTO v_count
+        FROM race r
+        WHERE r.motorsport_id=v_m_id AND 
+              r.race_date_start=p_start_date AND r.race_date_end=p_end_date;
+              
+        IF v_count>0
+          THEN
+            RAISE pkg_exception.race_date_occupied;
+        END IF;
         
         INSERT INTO race(motorsport_id,
                          title,
@@ -71,8 +83,10 @@ create or replace package body pkg_race is
         dbms_output.put_line('Race added successfully!');
       EXCEPTION
         WHEN pkg_exception.motorsport_not_found THEN
-              raise_application_error(-20004, 'Motorsport not found!');
-        
+          raise_application_error(-20004, 'Motorsport not found!');
+        WHEN pkg_exception.race_date_occupied THEN
+          raise_application_error(-20011, 'There is a race already registered to that date for this series!');
+      
    END add_race;                    
 
 end pkg_race;
