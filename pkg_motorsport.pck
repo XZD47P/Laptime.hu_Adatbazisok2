@@ -44,16 +44,17 @@ create or replace package body pkg_motorsport is
          
          IF v_count=0
           THEN
-            RAISE NO_DATA_FOUND;
+            RAISE pkg_exception.motorsport_not_found;
          END IF;
          
          DELETE FROM motorsport
          WHERE motorsport_name=LOWER(p_name);
+         COMMIT;
          
          dbms_output.put_line('Motorsport deleted successfully!');
        EXCEPTION
-         WHEN NO_DATA_FOUND THEN
-           RAISE NO_DATA_FOUND;  
+         WHEN pkg_exception.motorsport_not_found THEN
+           raise_application_error(-20004, 'Motorsport not found!');  
        END delete_motorsport;
 end pkg_motorsport;
 /
