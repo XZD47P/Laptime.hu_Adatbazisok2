@@ -74,6 +74,8 @@ create or replace package body pkg_chatroom is
         
         dbms_output.put_line('Chatroom deleted successfully!');
         EXCEPTION
+          WHEN pkg_exception.motorsport_not_found THEN
+              raise_application_error(-20004, 'Motorsport not found!');
           WHEN pkg_exception.chatroom_not_found THEN
             raise_application_error(-20009, 'Chatroom not found!');
       END delete_chatroom;                           
