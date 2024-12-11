@@ -26,5 +26,8 @@ create or replace package pkg_exception is
        
        chatroom_not_found EXCEPTION;
        PRAGMA EXCEPTION_INIT(chatroom_not_found, -20009);
+       
+       wrong_number_format EXCEPTION;
+       PRAGMA EXCEPTION_INIT(wrong_number_format,-20010);
 end pkg_exception;
 /
