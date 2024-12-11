@@ -113,6 +113,7 @@ CREATE TABLE race(
        race_id              NUMBER          NOT NULL
       ,motorsport_id        NUMBER          NOT NULL
       ,title                VARCHAR2(255)   NOT NULL
+      ,track                VARCHAR2(255)   NOT NULL
       ,layout_pic           VARCHAR2(255)   NOT NULL
       ,country              VARCHAR2(50)    NOT NULL
       ,race_date_start      DATE            NOT NULL
