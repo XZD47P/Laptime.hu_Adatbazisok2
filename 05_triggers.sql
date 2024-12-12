@@ -79,5 +79,16 @@ BEGIN
     :new.comment_id := comment_seq.nextval;
   END IF;
 END news_comment_trg;
+/
+CREATE OR REPLACE TRIGGER track_trg
+  BEFORE INSERT ON track
+  FOR EACH ROW
+
+BEGIN
+  IF :new.track_id IS NULL
+  THEN
+    :new.track_id := track_seq.nextval;
+  END IF;
+END track_trg;
 
 
