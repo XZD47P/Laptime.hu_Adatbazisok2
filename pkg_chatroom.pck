@@ -25,7 +25,7 @@ create or replace package body pkg_chatroom is
         SELECT COUNT(*)
         INTO v_count
         FROM chatroom
-        WHERE chatroom_name=p_name AND motorsport_category=v_m_id;
+        WHERE chatroom_name=LOWER(p_name) AND motorsport_category=v_m_id;
         
         IF v_count>0
           THEN
@@ -33,7 +33,7 @@ create or replace package body pkg_chatroom is
         END IF;
         
         INSERT INTO chatroom(chatroom_name,motorsport_category)
-        VALUES (p_name,v_m_id);
+        VALUES (LOWER(p_name),v_m_id);
         COMMIT;
         
         dbms_output.put_line('Chatroom successfully created!');
@@ -61,7 +61,7 @@ create or replace package body pkg_chatroom is
         SELECT COUNT(*)
         INTO v_count
         FROM chatroom
-        WHERE chatroom_name=p_name AND motorsport_category=v_m_id;
+        WHERE chatroom_name=LOWER(p_name) AND motorsport_category=v_m_id;
         
         IF v_count=0
           THEN
@@ -69,7 +69,7 @@ create or replace package body pkg_chatroom is
         END IF;
         
         DELETE FROM chatroom
-        WHERE chatroom_name=p_name AND motorsport_category=v_m_id;
+        WHERE chatroom_name=LOWER(p_name) AND motorsport_category=v_m_id;
         COMMIT;
         
         dbms_output.put_line('Chatroom deleted successfully!');
