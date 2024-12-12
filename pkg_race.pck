@@ -3,8 +3,6 @@ create or replace package pkg_race is
        PROCEDURE add_race(p_motorsport IN VARCHAR2,
                           p_title      IN VARCHAR2,
                           p_track      IN VARCHAR2,
-                          p_layout_pic IN VARCHAR2,
-                          p_country    IN VARCHAR2,
                           p_start_date IN DATE,
                           p_end_date   IN DATE,
                           p_record_time IN VARCHAR2,
@@ -29,8 +27,6 @@ create or replace package body pkg_race is
    PROCEDURE add_race(p_motorsport IN VARCHAR2,
                           p_title      IN VARCHAR2,
                           p_track      IN VARCHAR2,
-                          p_layout_pic IN VARCHAR2,
-                          p_country    IN VARCHAR2,
                           p_start_date IN DATE,
                           p_end_date   IN DATE,
                           p_record_time IN VARCHAR2,
@@ -43,6 +39,7 @@ create or replace package body pkg_race is
       v_m_id NUMBER;
       v_count NUMBER;                    --dátumellenõrzés
       v_race_count NUMBER;               --névellenõrzés
+      v_track_id NUMBER;
       BEGIN
         motorsport_exists(p_motorsport_name => p_motorsport);
         
@@ -72,12 +69,15 @@ create or replace package body pkg_race is
             RAISE pkg_exception.race_date_occupied;
         END IF;
         
+        SELECT track_id
+        INTO v_track_id
+        FROM track
+        WHERE track_name LIKE '%' ||LOWER(p_track) || '%';
+        --TODO: HIBAKEZELÉS
         
         INSERT INTO race(motorsport_id,
                          title,
-                         track,
-                         layout_pic,
-                         country,
+                         track_id,
                          race_date_start,
                          race_date_end,
                          record_time,
@@ -87,9 +87,7 @@ create or replace package body pkg_race is
                          wind_strength,rain_percentage)
         VALUES(v_m_id,
                UPPER(p_title),
-               UPPER(p_track),
-               p_layout_pic,
-               UPPER(p_country),
+               v_track_id,
                p_start_date,
                p_end_date,
                time_to_milliseconds(p_time => p_record_time),
