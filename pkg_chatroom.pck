@@ -20,7 +20,7 @@ create or replace package body pkg_chatroom is
         SELECT motorsport_id
         INTO v_m_id
         FROM motorsport
-        WHERE motorsport_name=p_motorsport;
+        WHERE motorsport_name=LOWER(p_motorsport);
         
         SELECT COUNT(*)
         INTO v_count
@@ -56,7 +56,7 @@ create or replace package body pkg_chatroom is
         SELECT motorsport_id
         INTO v_m_id
         FROM motorsport
-        WHERE motorsport_name=p_motorsport;
+        WHERE motorsport_name=LOWER(p_motorsport);
         
         SELECT COUNT(*)
         INTO v_count
