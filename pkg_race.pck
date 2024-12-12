@@ -16,6 +16,11 @@ create or replace package pkg_race is
                           
        PROCEDURE delete_race(p_motorsport IN VARCHAR2,
                              p_title      IN VARCHAR2);
+                             
+       PROCEDURE edit_race_date(p_motorsport IN VARCHAR2,
+                                p_title      IN VARCHAR2,
+                                p_new_start_date   IN DATE,
+                                p_new_end_date     IN DATE);
 
 end pkg_race;
 /
@@ -139,7 +144,44 @@ create or replace package body pkg_race is
           raise_application_error(-20004, 'Motorsport not found!');
         WHEN pkg_exception.race_not_found THEN
           raise_application_error(-20013, 'Race not found!');
-   END delete_race;                    
+   END delete_race;
+   
+   
+   PROCEDURE edit_race_date(p_motorsport IN VARCHAR2,
+                            p_title      IN VARCHAR2,
+                            p_new_start_date   IN DATE,
+                            p_new_end_date     IN DATE)
+                            IS
+      v_count NUMBER;
+      v_m_id NUMBER;
+      BEGIN
+        motorsport_exists(p_motorsport_name => p_motorsport);
+        
+        SELECT motorsport_id
+        INTO v_m_id
+        FROM motorsport
+        WHERE motorsport_name=LOWER(p_motorsport);
+        
+        SELECT COUNT(*)
+        INTO v_count
+        FROM race r
+        WHERE r.motorsport_id=v_m_id AND r.title=UPPER(p_title);
+        
+        IF v_count=0
+          THEN
+            RAISE pkg_exception.race_not_found;
+        END IF;
+        
+        UPDATE race
+        SET race_date_start=p_new_start_date,
+            race_date_end=p_new_end_date;
+        COMMIT;
+        
+        dbms_output.put_line('Successfully updated the date of the race!');
+      EXCEPTION
+        WHEN pkg_exception.motorsport_not_found THEN
+          raise_application_error(-20004, 'Motorsport not found!');
+   END edit_race_date;                    
 
 end pkg_race;
 /
