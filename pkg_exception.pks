@@ -35,5 +35,8 @@ create or replace package pkg_exception is
        
        race_already_exists EXCEPTION;
        PRAGMA EXCEPTION_INIT(race_already_exists, -20012);
+       
+       race_not_found EXCEPTION;
+       PRAGMA EXCEPTION_INIT(race_not_found, -20013);
 end pkg_exception;
 /

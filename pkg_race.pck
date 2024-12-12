@@ -13,6 +13,9 @@ create or replace package pkg_race is
                           p_wind_dir   IN CHAR,
                           p_wind_strenght IN NUMBER,
                           p_rain_percent IN NUMBER);
+                          
+       PROCEDURE delete_race(p_motorsport IN VARCHAR2,
+                             p_title      IN VARCHAR2);
 
 end pkg_race;
 /
@@ -100,8 +103,43 @@ create or replace package body pkg_race is
           raise_application_error(-20012, 'Race already registered with this title!');
         WHEN pkg_exception.race_date_occupied THEN
           raise_application_error(-20011, 'There is a race already registered to that date for this series!');
-      
-   END add_race;                    
+   END add_race;
+   
+   
+   PROCEDURE delete_race(p_motorsport IN VARCHAR2,
+                         p_title      IN VARCHAR2)
+                         IS
+      v_count NUMBER;
+      v_m_id NUMBER;
+      BEGIN
+        motorsport_exists(p_motorsport_name => p_motorsport);
+        
+        SELECT motorsport_id
+        INTO v_m_id
+        FROM motorsport
+        WHERE motorsport_name=LOWER(p_motorsport);
+        
+        SELECT COUNT(*)
+        INTO v_count
+        FROM race r
+        WHERE r.motorsport_id=v_m_id AND r.title=UPPER(p_title);
+        
+        IF v_count=0
+          THEN
+            RAISE pkg_exception.race_not_found;
+        END IF;
+        
+        DELETE FROM RACE
+        WHERE motorsport_id=v_m_id AND title=UPPER(p_title);
+        COMMIT;
+        
+        dbms_output.put_line('Race deleted successfully!');
+      EXCEPTION
+        WHEN pkg_exception.motorsport_not_found THEN
+          raise_application_error(-20004, 'Motorsport not found!');
+        WHEN pkg_exception.race_not_found THEN
+          raise_application_error(-20013, 'Race not found!');
+   END delete_race;                    
 
 end pkg_race;
 /
