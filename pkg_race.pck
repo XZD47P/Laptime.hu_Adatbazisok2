@@ -33,7 +33,8 @@ create or replace package body pkg_race is
                           p_rain_percent IN NUMBER)
                           IS
       v_m_id NUMBER;
-      v_count NUMBER;
+      v_count NUMBER;                    --dátumellenõrzés
+      v_race_count NUMBER;               --névellenõrzés
       BEGIN
         motorsport_exists(p_motorsport_name => p_motorsport);
         
@@ -41,6 +42,16 @@ create or replace package body pkg_race is
         INTO v_m_id
         FROM motorsport
         WHERE motorsport_name=LOWER(p_motorsport);
+        
+        SELECT COUNT(*)
+        INTO v_race_count
+        FROM race r
+        WHERE r.motorsport_id=v_m_id AND r.title=UPPER(p_title);
+        
+        IF v_race_count>0
+          THEN
+            RAISE pkg_exception.race_already_exists;
+        END IF;
         
         SELECT COUNT(*)
         INTO v_count
@@ -52,6 +63,7 @@ create or replace package body pkg_race is
           THEN
             RAISE pkg_exception.race_date_occupied;
         END IF;
+        
         
         INSERT INTO race(motorsport_id,
                          title,
@@ -84,6 +96,8 @@ create or replace package body pkg_race is
       EXCEPTION
         WHEN pkg_exception.motorsport_not_found THEN
           raise_application_error(-20004, 'Motorsport not found!');
+        WHEN pkg_exception.race_already_exists THEN
+          raise_application_error(-20012, 'Race already registered with this title!');
         WHEN pkg_exception.race_date_occupied THEN
           raise_application_error(-20011, 'There is a race already registered to that date for this series!');
       

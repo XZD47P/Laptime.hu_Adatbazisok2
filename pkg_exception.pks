@@ -32,5 +32,8 @@ create or replace package pkg_exception is
        
        race_date_occupied EXCEPTION;
        PRAGMA EXCEPTION_INIT(race_date_occupied, -20011);
+       
+       race_already_exists EXCEPTION;
+       PRAGMA EXCEPTION_INIT(race_already_exists, -20012);
 end pkg_exception;
 /
