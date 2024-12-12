@@ -165,9 +165,7 @@ CREATE TABLE race(
        race_id              NUMBER          NOT NULL
       ,motorsport_id        NUMBER          NOT NULL
       ,title                VARCHAR2(255)   NOT NULL
-      ,track                VARCHAR2(255)   NOT NULL
-      ,layout_pic           VARCHAR2(255)   NOT NULL
-      ,country              VARCHAR2(50)    NOT NULL
+      ,track_id             NUMBER          NOT NULL
       ,race_date_start      DATE            NOT NULL
       ,race_date_end        DATE            NOT NULL
       ,air_temperature      NUMBER
@@ -216,6 +214,19 @@ ALTER TABLE database_log
       
 COMMENT ON TABLE webpage_admin.race
       IS 'History and changes in the database';
+      
+CREATE TABLE track(
+      track_id    NUMBER        NOT NULL
+     ,country     VARCHAR2(50)  NOT NULL
+     ,track_name  VARCHAR2(255) NOT NULL
+     ,layout_pic  VARCHAR2(255)
+)TABLESPACE users;
+
+ALTER TABLE track
+     ADD CONSTRAINT track_pk PRIMARY KEY (track_id);
+     
+COMMENT ON TABLE webpage_admin.track
+      IS 'Track informations';
 
 PROMPT Tables created Successfully!
 
@@ -239,9 +250,10 @@ ALTER TABLE favored_motorsport
 ALTER TABLE chatroom
       ADD CONSTRAINT chatroom_motorsport_FK FOREIGN KEY (motorsport_category) REFERENCES motorsport(motorsport_id);
     
--- race.motorsport_id -> motorsport.motorsport_id
+-- race.motorsport_id -> motorsport.motorsport_id, race.track_id -> track.track_id
 ALTER TABLE race
-      ADD CONSTRAINT race_motorsport_fk FOREIGN KEY (motorsport_id) REFERENCES motorsport(motorsport_id);  
+      ADD CONSTRAINT race_motorsport_fk FOREIGN KEY (motorsport_id) REFERENCES motorsport(motorsport_id)
+      ADD CONSTRAINT race_track_fk FOREIGN KEY (track_id) REFERENCES track(track_id);
       
 -- news_comment.user_id -> reg_user.user_id, news_comment.news_id -> news.news_id
 ALTER TABLE news_comment

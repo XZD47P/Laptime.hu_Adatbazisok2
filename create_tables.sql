@@ -113,9 +113,7 @@ CREATE TABLE race(
        race_id              NUMBER          NOT NULL
       ,motorsport_id        NUMBER          NOT NULL
       ,title                VARCHAR2(255)   NOT NULL
-      ,track                VARCHAR2(255)   NOT NULL
-      ,layout_pic           VARCHAR2(255)   NOT NULL
-      ,country              VARCHAR2(50)    NOT NULL
+      ,track_id             NUMBER          NOT NULL
       ,race_date_start      DATE            NOT NULL
       ,race_date_end        DATE            NOT NULL
       ,air_temperature      NUMBER
@@ -135,6 +133,20 @@ ALTER TABLE race
       
 COMMENT ON TABLE webpage_admin.race
       IS 'Race details for motorsport seasons';
+
+
+CREATE TABLE track(
+      track_id    NUMBER        NOT NULL
+     ,country     VARCHAR2(50)  NOT NULL
+     ,track_name  VARCHAR2(255) NOT NULL
+     ,layout_pic  VARCHAR2(255)
+)TABLESPACE users;
+
+ALTER TABLE track
+     ADD CONSTRAINT track_pk PRIMARY KEY (track_id);
+     
+COMMENT ON TABLE webpage_admin.track
+      IS 'Track informations';
       
       
 CREATE TABLE database_log(
