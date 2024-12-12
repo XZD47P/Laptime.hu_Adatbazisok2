@@ -223,7 +223,8 @@ CREATE TABLE track(
 )TABLESPACE users;
 
 ALTER TABLE track
-     ADD CONSTRAINT track_pk PRIMARY KEY (track_id);
+     ADD CONSTRAINT track_pk PRIMARY KEY (track_id)
+     ADD CONSTRAINT track_uq UNIQUE (track_name);
      
 COMMENT ON TABLE webpage_admin.track
       IS 'Track informations';
