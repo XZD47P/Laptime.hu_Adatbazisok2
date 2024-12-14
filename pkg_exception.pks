@@ -44,5 +44,9 @@ create or replace package pkg_exception is
        
        track_not_found EXCEPTION;
        PRAGMA EXCEPTION_INIT(track_not_found, -20015);
+       
+       comment_not_found EXCEPTION;
+       PRAGMA EXCEPTION_INIT(comment_not_found, -20016)
+       
 end pkg_exception;
 /
