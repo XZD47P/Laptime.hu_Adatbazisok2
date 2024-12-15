@@ -152,7 +152,7 @@ COMMENT ON TABLE webpage_admin.track
       
 CREATE TABLE database_log(
        log_id          NUMBER         NOT NULL
-      ,log_type        NUMBER         NOT NULL
+      ,log_type        CHAR(1)        NOT NULL
       ,message         VARCHAR2(255)  NOT NULL
       ,parameters      VARCHAR2(255)  NOT NULL  
       ,api             VARCHAR2(255)  NOT NULL   
