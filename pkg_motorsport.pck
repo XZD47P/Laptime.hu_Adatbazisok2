@@ -8,9 +8,12 @@ end pkg_motorsport;
 /
 create or replace package body pkg_motorsport is
 
+       gc_pkg_name CONSTANT VARCHAR2(30):= 'pkg_motorsport';
+
        PROCEDURE add_motorsport(p_name VARCHAR2)
                  IS
        v_count NUMBER;
+       c_prc_name CONSTANT VARCHAR2(30):= 'add_motorsport';
        BEGIN
          SELECT COUNT(*)
          INTO v_count
@@ -27,8 +30,18 @@ create or replace package body pkg_motorsport is
          COMMIT;
          
          dbms_output.put_line('Motorsport added successfully!');
+         prc_log(p_log_type => 'I'
+                ,p_message => 'Motorsport added successfully!'
+                ,p_backtrace => ''
+                ,p_parameters => 'p_name=' || p_name
+                ,p_api => gc_pkg_name || '.' || c_prc_name);
        EXCEPTION
          WHEN pkg_exception.motorsport_already_exists THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'Motorsport is already on the list!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_name=' || p_name
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
            raise_application_error(-20003, 'Motorsport is already on the list!');  
        END add_motorsport;
        
@@ -36,6 +49,7 @@ create or replace package body pkg_motorsport is
        PROCEDURE delete_motorsport(p_name VARCHAR2)
                  IS
        v_count NUMBER;
+       c_prc_name CONSTANT VARCHAR2(30):= 'delete.motorsport';
        BEGIN
          SELECT COUNT(*)
          INTO v_count
@@ -52,8 +66,18 @@ create or replace package body pkg_motorsport is
          COMMIT;
          
          dbms_output.put_line('Motorsport deleted successfully!');
+         prc_log(p_log_type => 'I'
+                ,p_message => 'Motorsport deleted successfully!'
+                ,p_backtrace => ''
+                ,p_parameters => 'p_name=' || p_name
+                ,p_api => gc_pkg_name || '.' || c_prc_name);
        EXCEPTION
          WHEN pkg_exception.motorsport_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'Motorsport not found!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_name=' || p_name
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
            raise_application_error(-20004, 'Motorsport not found!');  
        END delete_motorsport;
 end pkg_motorsport;

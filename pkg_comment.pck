@@ -14,6 +14,8 @@ end pkg_comment;
 /
 create or replace package body pkg_comment is
 
+       gc_pkg_name CONSTANT VARCHAR2(30):= 'pkg_comment';
+
    PROCEDURE post_comment(p_news_title IN VARCHAR2,
                           p_motorsport IN VARCHAR2,
                           p_email      IN VARCHAR2,
@@ -23,6 +25,7 @@ create or replace package body pkg_comment is
       v_m_id    NUMBER;
       v_u_id    NUMBER;
       v_count   NUMBER;
+      c_prc_name CONSTANT VARCHAR2(30):='post_comment';
       BEGIN
         motorsport_exists(p_motorsport_name => p_motorsport);
         user_exists(p_email => p_email);
@@ -57,12 +60,35 @@ create or replace package body pkg_comment is
         COMMIT;
         
         dbms_output.put_line('Comment posted!');
+        prc_log(p_log_type => 'I'
+               ,p_message => 'Comment posted!'
+               ,p_backtrace => ''
+               ,p_parameters => 'p_news_title=' || p_news_title || ', p_motorsport=' || p_motorsport || ', p_email=' || p_email || ', p_comment=' || p_comment
+               ,p_api => gc_pkg_name || '.' || c_prc_name);
       EXCEPTION
         WHEN pkg_exception.motorsport_not_found THEN
+          prc_log(p_log_type => 'E'
+                 ,p_message => SQLERRM || 'Motorsport not found!'
+                 ,p_backtrace => dbms_utility.format_error_backtrace
+                 ,p_parameters => 'p_news_title=' || p_news_title || ', p_motorsport=' || p_motorsport || ', p_email=' || p_email || ', p_comment=' || p_comment
+                 ,p_api => gc_pkg_name || '.' || c_prc_name);
+                 
           raise_application_error(-20004, 'Motorsport not found!');
         WHEN pkg_exception.user_not_found THEN
+          prc_log(p_log_type => 'E'
+                 ,p_message => SQLERRM || 'User not found!'
+                 ,p_backtrace => dbms_utility.format_error_backtrace
+                 ,p_parameters => 'p_news_title=' || p_news_title || ', p_motorsport=' || p_motorsport || ', p_email=' || p_email || ', p_comment=' || p_comment
+                 ,p_api => gc_pkg_name || '.' || c_prc_name);
+                 
           raise_application_error(-20005, 'User not found!');
         WHEN pkg_exception.news_not_found THEN
+          prc_log(p_log_type => 'E'
+                 ,p_message => SQLERRM || 'News not found with these parameters!'
+                 ,p_backtrace => dbms_utility.format_error_backtrace
+                 ,p_parameters => 'p_news_title=' || p_news_title || ', p_motorsport=' || p_motorsport || ', p_email=' || p_email || ', p_comment=' || p_comment
+                 ,p_api => gc_pkg_name || '.' || c_prc_name);
+                 
           raise_application_error(-20007, 'News not found with these parameters!');
    END post_comment;
    
@@ -77,6 +103,7 @@ create or replace package body pkg_comment is
       v_u_id       NUMBER;
       v_count      NUMBER;
       v_comment_id NUMBER;
+      c_prc_name CONSTANT VARCHAR2(30):='delete_motorsport';
       BEGIN
         motorsport_exists(p_motorsport_name => p_motorsport);
         user_exists(p_email => p_email);
@@ -116,14 +143,43 @@ create or replace package body pkg_comment is
         COMMIT;
         
         dbms_output.put_line('Comment deleted successfully!');
+        prc_log(p_log_type => 'I'
+               ,p_message => 'Comment deleted successfully!'
+               ,p_backtrace => ''
+               ,p_parameters => 'p_news_title=' || p_news_title || ', p_motorsport=' || p_motorsport || ', p_email=' || p_email || ', p_comment=' || p_comment
+               ,p_api => gc_pkg_name || '.' || c_prc_name);
       EXCEPTION
         WHEN pkg_exception.motorsport_not_found THEN
+          prc_log(p_log_type => 'E'
+                 ,p_message => SQLERRM || 'Motorsport not found!'
+                 ,p_backtrace => dbms_utility.format_error_backtrace
+                 ,p_parameters => 'p_news_title=' || p_news_title || ', p_motorsport=' || p_motorsport || ', p_email=' || p_email || ', p_comment=' || p_comment
+                 ,p_api => gc_pkg_name || '.' || c_prc_name);
+          
           raise_application_error(-20004, 'Motorsport not found!');
         WHEN pkg_exception.user_not_found THEN
+          prc_log(p_log_type => 'E'
+                 ,p_message => SQLERRM || 'User not found!'
+                 ,p_backtrace => dbms_utility.format_error_backtrace
+                 ,p_parameters => 'p_news_title=' || p_news_title || ', p_motorsport=' || p_motorsport || ', p_email=' || p_email || ', p_comment=' || p_comment
+                 ,p_api => gc_pkg_name || '.' || c_prc_name);
+                 
           raise_application_error(-20005, 'User not found!');
         WHEN pkg_exception.news_not_found THEN
+          prc_log(p_log_type => 'E'
+                 ,p_message => SQLERRM || 'News not found with these parameters!'
+                 ,p_backtrace => dbms_utility.format_error_backtrace
+                 ,p_parameters => 'p_news_title=' || p_news_title || ', p_motorsport=' || p_motorsport || ', p_email=' || p_email || ', p_comment=' || p_comment
+                 ,p_api => gc_pkg_name || '.' || c_prc_name);
+                 
           raise_application_error(-20007, 'News not found with these parameters!');
         WHEN NO_DATA_FOUND THEN
+          prc_log(p_log_type => 'E'
+                 ,p_message => SQLERRM || 'Comment not found!'
+                 ,p_backtrace => dbms_utility.format_error_backtrace
+                 ,p_parameters => 'p_news_title=' || p_news_title || ', p_motorsport=' || p_motorsport || ', p_email=' || p_email || ', p_comment=' || p_comment
+                 ,p_api => gc_pkg_name || '.' || c_prc_name);
+                 
           raise_application_error(-20016,'Comment not found!');
    END delete_comment;
 

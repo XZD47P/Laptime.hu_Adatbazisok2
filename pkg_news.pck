@@ -18,6 +18,8 @@ end pkg_news;
 /
 create or replace package body pkg_news is
 
+       gc_pkg_name CONSTANT VARCHAR2(30):= 'pkg_news';
+
    PROCEDURE add_news(p_email IN VARCHAR2,
                       p_motorsport IN VARCHAR2,
                       p_title IN VARCHAR2,
@@ -25,6 +27,7 @@ create or replace package body pkg_news is
                       IS
        v_u_id NUMBER;
        v_m_id NUMBER;
+       c_prc_name CONSTANT VARCHAR2(30):= 'add_news';
        BEGIN
          user_exists(p_email => p_email);
          motorsport_exists(p_motorsport_name => p_motorsport);
@@ -44,6 +47,11 @@ create or replace package body pkg_news is
          COMMIT;
          
          dbms_output.put_line('News added successfully! Please publish it, if you want others to see!');
+         prc_log(p_log_type => 'I'
+                ,p_message => 'News added successfully! Please publish it, if you want others to see!'
+                ,p_backtrace => ''
+                ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                ,p_api => gc_pkg_name || '.' || c_prc_name);
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
               raise_application_error(-20005,'User not found');
@@ -59,6 +67,7 @@ create or replace package body pkg_news is
        v_u_id NUMBER;
        v_m_id NUMBER;
        v_news_count NUMBER;
+       c_prc_name CONSTANT VARCHAR2(30):= 'delete_news';
        BEGIN
          user_exists(p_email => p_email);
          motorsport_exists(p_motorsport_name => p_motorsport);
@@ -88,23 +97,47 @@ create or replace package body pkg_news is
          COMMIT;
          
          dbms_output.put_line('News deleted successfully!');
+         prc_log(p_log_type => 'I'
+                ,p_message => 'News deleted successfully!'
+                ,p_backtrace => ''
+                ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                ,p_api => gc_pkg_name || '.' || c_prc_name);
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'User not found!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
               raise_application_error(-20005,'User not found');
          WHEN pkg_exception.motorsport_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'Motorsport not found!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
               raise_application_error(-20004, 'Motorsport not found!');
          WHEN pkg_exception.news_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'News not found with these parameters!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
               raise_application_error(-20007,'News not found with these parameters!');  
    END delete_news;
        
        
    PROCEDURE publish_news(p_email IN VARCHAR2,
-                              p_motorsport IN VARCHAR2,
-                              P_title IN VARCHAR2)
-                              IS
+                          p_motorsport IN VARCHAR2,
+                          P_title IN VARCHAR2)
+                          IS
        v_u_id NUMBER;
        v_m_id NUMBER;
-       v_news_count NUMBER;      
+       v_news_count NUMBER;
+       c_prc_name CONSTANT VARCHAR2(30):= 'publish_news';      
        BEGIN
          user_exists(p_email => p_email);
          motorsport_exists(p_motorsport_name => p_motorsport);
@@ -135,12 +168,35 @@ create or replace package body pkg_news is
          COMMIT;
          
          dbms_output.put_line('News published successfully');
+         prc_log(p_log_type => 'I'
+                ,p_message => 'News published successfully!'
+                ,p_backtrace => ''
+                ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                ,p_api => gc_pkg_name || '.' || c_prc_name);
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'User not found'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
               raise_application_error(-20005,'User not found');
          WHEN pkg_exception.motorsport_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'Motorsport not found'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
               raise_application_error(-20004, 'Motorsport not found!');
          WHEN pkg_exception.news_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'News not found with these parameters!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
               raise_application_error(-20007,'News not found with these parameters!');  
    END publish_news;
                 
