@@ -153,8 +153,9 @@ COMMENT ON TABLE webpage_admin.track
 CREATE TABLE database_log(
        log_id          NUMBER         NOT NULL
       ,log_type        NUMBER         NOT NULL
-      ,message         VARCHAR2(255)  
-      ,api             VARCHAR2(50)
+      ,message         VARCHAR2(255)  NOT NULL
+      ,parameters      VARCHAR2(255)  NOT NULL  
+      ,api             VARCHAR2(255)  NOT NULL   
       ,created_at      DATE            DEFAULT SYSDATE NOT NULL  
       ,created_by      varchar2(50)
 )TABLESPACE users;                      
