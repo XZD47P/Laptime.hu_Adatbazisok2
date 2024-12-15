@@ -5,6 +5,7 @@ create or replace procedure send_message(p_chatroom_name IN VARCHAR2,
 v_count NUMBER;
 v_u_id NUMBER;
 v_c_id NUMBER;
+c_proc_name CONSTANT VARCHAR2(30):='prc_send_message';
 BEGIN
   user_exists(p_email => p_email);
   
@@ -32,11 +33,28 @@ BEGIN
   VALUES(v_c_id,v_u_id,p_message);
   COMMIT;
   
+--Sikeres log
 dbms_output.put_line('Message sent!');
+prc_log(p_log_type => 'I'
+           ,p_message => 'Message sent!'
+           ,p_parameters => 'p_chatroom_name=' || p_chatroom_name || ', p_email=' || p_email || ', p_message=' || p_message
+           ,p_api => c_proc_name);
 EXCEPTION
   WHEN pkg_exception.user_not_found THEN
+    prc_log(p_log_type => 'E'
+           ,p_message => SQLERRM || 'User not found'
+           ,p_parameters => 'p_chatroom_name=' || p_chatroom_name || ', p_email=' || p_email || ', p_message=' || p_message
+           ,p_api => c_proc_name);
+      
     raise_application_error(-20005, 'User not found');
   WHEN pkg_exception.chatroom_not_found THEN
+    prc_log(p_log_type => 'E'
+           ,p_message => SQLERRM || 'Chatroom does not exist!'
+           ,p_parameters => 'p_chatroom_name:=' || p_chatroom_name || ', p_email:=' || p_email || ', p_message=' || p_message
+           ,p_api => c_proc_name);
+           
     raise_application_error(-20009 ,'Chatroom does not exist!');
+
+    
 END send_message;
 /
