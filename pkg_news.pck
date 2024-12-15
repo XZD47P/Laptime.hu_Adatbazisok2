@@ -54,8 +54,20 @@ create or replace package body pkg_news is
                 ,p_api => gc_pkg_name || '.' || c_prc_name);
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'User not found!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
               raise_application_error(-20005,'User not found');
          WHEN pkg_exception.motorsport_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'Motorsport not found!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
               raise_application_error(-20004, 'Motorsport not found!');
    END add_news;
    
