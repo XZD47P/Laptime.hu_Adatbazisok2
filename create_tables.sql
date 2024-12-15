@@ -154,6 +154,7 @@ CREATE TABLE database_log(
        log_id          NUMBER         NOT NULL
       ,log_type        CHAR(1)        NOT NULL
       ,message         VARCHAR2(255)  NOT NULL
+      ,backtrace       VARCHAR2(255)  
       ,parameters      VARCHAR2(255)  NOT NULL  
       ,api             VARCHAR2(255)  NOT NULL   
       ,created_at      DATE            DEFAULT SYSDATE NOT NULL  
