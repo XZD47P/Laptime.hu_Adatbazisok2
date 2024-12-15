@@ -37,19 +37,24 @@ BEGIN
 dbms_output.put_line('Message sent!');
 prc_log(p_log_type => 'I'
            ,p_message => 'Message sent!'
+           ,p_backtrace => ''
            ,p_parameters => 'p_chatroom_name=' || p_chatroom_name || ', p_email=' || p_email || ', p_message=' || p_message
            ,p_api => c_proc_name);
 EXCEPTION
   WHEN pkg_exception.user_not_found THEN
+    --Sikertelen log
     prc_log(p_log_type => 'E'
            ,p_message => SQLERRM || 'User not found'
+           ,p_backtrace => dbms_utility.format_error_backtrace
            ,p_parameters => 'p_chatroom_name=' || p_chatroom_name || ', p_email=' || p_email || ', p_message=' || p_message
            ,p_api => c_proc_name);
       
     raise_application_error(-20005, 'User not found');
   WHEN pkg_exception.chatroom_not_found THEN
+    --Sikertelen log
     prc_log(p_log_type => 'E'
            ,p_message => SQLERRM || 'Chatroom does not exist!'
+           ,p_backtrace => dbms_utility.format_error_backtrace
            ,p_parameters => 'p_chatroom_name:=' || p_chatroom_name || ', p_email:=' || p_email || ', p_message=' || p_message
            ,p_api => c_proc_name);
            

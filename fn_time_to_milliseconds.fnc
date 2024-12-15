@@ -17,6 +17,7 @@ EXCEPTION
   WHEN OTHERS THEN
     prc_log(p_log_type => 'E'
            ,p_message => 'ORA-20010: Invalid time format! Expected format: MM:SS.FFF'
+           ,p_backtrace => dbms_utility.format_error_backtrace
            ,p_parameters => 'p_time:=' || p_time
            ,p_api => c_func_name);
                   
