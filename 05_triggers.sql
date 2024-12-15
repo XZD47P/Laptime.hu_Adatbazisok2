@@ -90,5 +90,16 @@ BEGIN
     :new.track_id := track_seq.nextval;
   END IF;
 END track_trg;
+/
+CREATE OR REPLACE TRIGGER trg_log
+  BEFORE INSERT ON database_log
+  FOR EACH ROW
+
+BEGIN
+  IF :new.log_id IS NULL
+  THEN
+    :new.log_id := log_seq.nextval;
+  END IF;
+END trg_log;
 
 
