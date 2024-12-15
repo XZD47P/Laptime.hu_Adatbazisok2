@@ -29,6 +29,8 @@ end pkg_user;
 /
 create or replace package body pkg_user is
 
+       gc_pkg_name CONSTANT VARCHAR2(30):= 'pkg_user';
+
    PROCEDURE add_user(p_first_name  IN VARCHAR2,
                       p_last_name    IN VARCHAR2,
                       p_email        IN VARCHAR2,
@@ -40,6 +42,7 @@ create or replace package body pkg_user is
                       IS
        v_count NUMBER;
        v_enc_pass RAW(2000);
+       c_prc_name CONSTANT VARCHAR2(30):= 'add_user';
        BEGIN
          SELECT COUNT(*)
          INTO v_count
@@ -59,15 +62,30 @@ create or replace package body pkg_user is
          COMMIT;
          
          dbms_output.put_line('User added successfully!');
+         prc_log(p_log_type => 'I'
+                ,p_message => 'User added successfully!'
+                ,p_backtrace => ''
+                ,p_parameters => 'p_first_name=' || p_first_name || ', p_last_name=' || p_last_name || ', p_email=' || p_email
+                             || 'p_fav_driver=' || p_fav_driver || ', p_fav_team=' || p_fav_team || ', p_user_role=' || p_user_role
+                             || ', p_email_subscription=' || p_email_subscription
+                ,p_api => gc_pkg_name || '.' || c_prc_name);
        EXCEPTION
          WHEN pkg_exception.user_already_exists THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'User already registered!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_first_name=' || p_first_name || ', p_last_name=' || p_last_name || ', p_email=' || p_email
+                             || 'p_fav_driver=' || p_fav_driver || ', p_fav_team=' || p_fav_team || ', p_user_role=' || p_user_role
+                             || ', p_email_subscription=' || p_email_subscription
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
              raise_application_error(-20001, 'User already registered!');    
     END add_user;
        
        
    PROCEDURE delete_user(p_email IN VARCHAR2) 
                          IS
-       
+       c_prc_name CONSTANT VARCHAR2(30):='delete_user';
        BEGIN
          user_exists(p_email => p_email);
          
@@ -76,8 +94,19 @@ create or replace package body pkg_user is
          COMMIT;
        
        dbms_output.put_line('User deleted successfully!');
+       prc_log(p_log_type => 'I'
+              ,p_message => 'User deleted successfully!'
+              ,p_backtrace => ''
+              ,p_parameters => 'p_email=' || p_email
+              ,p_api => gc_pkg_name || '.' || c_prc_name);
        EXCEPTION
        WHEN pkg_exception.user_not_found THEN
+         prc_log(p_log_type => 'E'
+                ,p_message => SQLERRM || 'User not found!'
+                ,p_backtrace => dbms_utility.format_error_backtrace
+                ,p_parameters => 'p_email=' || p_email
+                ,p_api => gc_pkg_name || '.' || c_prc_name);
+                
               raise_application_error(-20005,'User not found');
    END delete_user;
        
@@ -88,7 +117,8 @@ create or replace package body pkg_user is
                              IS
        v_password RAW(2000);
        v_enc_curr_passw RAW(2000);
-       v_enc_new_passw  RAW(2000);       
+       v_enc_new_passw  RAW(2000);
+       c_prc_name CONSTANT VARCHAR2(30):= 'update_password';       
        BEGIN
          user_exists(p_email => p_email);
          
@@ -114,10 +144,27 @@ create or replace package body pkg_user is
          END IF;
          
          dbms_output.put_line('Password updated successfully!');
+         prc_log(p_log_type => 'I'
+                ,p_message => 'Password updated successfully!'
+                ,p_backtrace => ''
+                ,p_parameters => 'p_email=' || p_email
+                ,p_api => gc_pkg_name || '.' || c_prc_name);
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'User not found!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                
               raise_application_error(-20005,'User not found');
          WHEN pkg_exception.incorrect_password THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'Email address or password is not correct!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
            raise_application_error(-20002, 'Email address or password is not correct!');     
    END update_password;
          
@@ -125,7 +172,7 @@ create or replace package body pkg_user is
    PROCEDURE change_role(p_email IN varchar2,
                          p_role  IN varchar2)
                          IS
-                 
+       c_prc_name CONSTANT VARCHAR2(30):= 'change_role';         
        BEGIN
          user_exists(p_email => p_email);
          
@@ -135,8 +182,19 @@ create or replace package body pkg_user is
          COMMIT;
          
          dbms_output.put_line('User role changed successfully!');
+         prc_log(p_log_type => 'I'
+                ,p_message => 'User role changed successfully!'
+                ,p_backtrace => ''
+                ,p_parameters => 'p_email=' || p_email || ', p_role=' || p_role
+                ,p_api => gc_pkg_name || '.' || c_prc_name);
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'User not found!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
               raise_application_error(-20005,'User not found');  
    END change_role;           
 
@@ -146,6 +204,7 @@ create or replace package body pkg_user is
                                 IS
        v_u_id NUMBER;
        v_m_id NUMBER;
+       c_prc_name CONSTANT VARCHAR2(30):= 'add_fav_motorsport';
        BEGIN
          user_exists(p_email => p_email);
          motorsport_exists(p_motorsport_name => p_motorsport);
@@ -165,10 +224,27 @@ create or replace package body pkg_user is
          COMMIT;
        
        dbms_output.put_line('Favorite motorsport added to user!');
+       prc_log(p_log_type => 'I'
+              ,p_message => 'Favorite motorsport added to user!'
+              ,p_backtrace => ''
+              ,p_parameters => 'p_email=' || p_email || 'p_motorsport=' || p_motorsport
+              ,p_api => gc_pkg_name || '.' || c_prc_name);
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'User not found!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
               raise_application_error(-20005,'User not found');
          WHEN pkg_exception.motorsport_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'Motorsport not found!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
               raise_application_error(-20004, 'Motorsport not found!');  
    END add_fav_motorsport;
        
@@ -178,7 +254,8 @@ create or replace package body pkg_user is
                                    IS
        v_u_id NUMBER;
        v_m_id NUMBER;
-       v_fav_count NUMBER;                 
+       v_fav_count NUMBER;
+       c_prc_name CONSTANT VARCHAR2(30):= 'delete_fav_motorsport';                 
        BEGIN
          user_exists(p_email => p_email);
          motorsport_exists(p_motorsport_name => p_motorsport);
@@ -208,13 +285,36 @@ create or replace package body pkg_user is
          COMMIT;
        
        dbms_output.put_line('Favorite motorsport deleted from user!');  
+       prc_log(p_log_type => 'I'
+              ,p_message => 'Favorite motorsport deleted from user!'
+              ,p_backtrace => ''
+              ,p_parameters => 'p_email=' || p_email || 'p_motorsport=' || p_motorsport
+              ,p_api => gc_pkg_name || '.' || c_prc_name);
        EXCEPTION
          WHEN pkg_exception.user_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'User not found!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
               raise_application_error(-20005,'User not found');
          WHEN pkg_exception.motorsport_not_found THEN
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'Motorsport not found!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
               raise_application_error(-20004, 'Motorsport not found!');
          WHEN pkg_exception.user_not_favourite_motorsport THEN
-              raise_application_error(-20006, 'User does not have this motorsport as favourite motorsport');
+           prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'User does not have this motorsport as favourite motorsport!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
+              raise_application_error(-20006, 'User does not have this motorsport as favourite motorsport!');
    END delete_fav_motorsport;
 
 
