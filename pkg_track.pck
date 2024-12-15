@@ -111,7 +111,6 @@ create or replace package body pkg_track is
        
        UPDATE track
        SET country=p_country,
-           track_name=LOWER(p_track_name),
            LAYOUT_PIC=p_layout
        WHERE track_name=LOWER(p_track_name);
        COMMIT;
