@@ -23,8 +23,8 @@ create or replace package pkg_user is
                                     
        PROCEDURE delete_fav_motorsport(p_email IN VARCHAR2,
                                        p_motorsport IN VARCHAR2);
-                                    
-       
+                                       
+        
 end pkg_user;
 /
 create or replace package body pkg_user is
@@ -86,11 +86,17 @@ create or replace package body pkg_user is
    PROCEDURE delete_user(p_email IN VARCHAR2) 
                          IS
        c_prc_name CONSTANT VARCHAR2(30):='delete_user';
+       v_u_id NUMBER;
        BEGIN
-         user_exists(p_email => p_email);
+         v_u_id:=fn_user_exists(p_email => p_email);
          
          DELETE FROM reg_user
-         WHERE email=p_email;
+         WHERE user_id=v_u_id;
+         
+         --Mas tablakbol a referenciak NULL-ozasa
+        -- UPDATE chatroom_messages
+        -- SET USER_ID=NULL
+        -- WHERE USER_ID=
          COMMIT;
        
        dbms_output.put_line('User deleted successfully!');
@@ -115,12 +121,13 @@ create or replace package body pkg_user is
                              p_curr_password IN VARCHAR2,
                              p_new_password IN VARCHAR2)
                              IS
+       v_u_id NUMBER;
        v_password RAW(2000);
        v_enc_curr_passw RAW(2000);
        v_enc_new_passw  RAW(2000);
        c_prc_name CONSTANT VARCHAR2(30):= 'update_password';       
        BEGIN
-         user_exists(p_email => p_email);
+         v_u_id:=fn_user_exists(p_email => p_email);
          
          v_enc_curr_passw:= pkg_cipher.encrypt(p_plain_password => p_curr_password);
          
@@ -128,7 +135,7 @@ create or replace package body pkg_user is
          SELECT password
          INTO v_password
          FROM reg_user
-         WHERE email=p_email;
+         WHERE user_id=v_u_id;
          
          IF v_enc_curr_passw= v_password
             THEN
@@ -172,13 +179,14 @@ create or replace package body pkg_user is
    PROCEDURE change_role(p_email IN varchar2,
                          p_role  IN varchar2)
                          IS
+       v_u_id NUMBER;
        c_prc_name CONSTANT VARCHAR2(30):= 'change_role';         
        BEGIN
-         user_exists(p_email => p_email);
+         v_u_id:=fn_user_exists(p_email => p_email);
          
          UPDATE reg_user
          SET user_role=p_role
-         WHERE email=p_email;
+         WHERE user_id=v_u_id;
          COMMIT;
          
          dbms_output.put_line('User role changed successfully!');
@@ -206,13 +214,13 @@ create or replace package body pkg_user is
        v_m_id NUMBER;
        c_prc_name CONSTANT VARCHAR2(30):= 'add_fav_motorsport';
        BEGIN
-         user_exists(p_email => p_email);
+        v_u_id:= fn_user_exists(p_email => p_email);
          motorsport_exists(p_motorsport_name => p_motorsport);
 
-         SELECT user_id
+      /*   SELECT user_id
          INTO v_u_id
          FROM reg_user
-         WHERE email=p_email;
+         WHERE email=p_email;*/
          
          SELECT motorsport_id
          INTO v_m_id
@@ -257,13 +265,13 @@ create or replace package body pkg_user is
        v_fav_count NUMBER;
        c_prc_name CONSTANT VARCHAR2(30):= 'delete_fav_motorsport';                 
        BEGIN
-         user_exists(p_email => p_email);
+        v_u_id := fn_user_exists(p_email => p_email);
          motorsport_exists(p_motorsport_name => p_motorsport);
          
-         SELECT user_id
+        /* SELECT user_id
          INTO v_u_id
          FROM reg_user
-         WHERE email=p_email;
+         WHERE email=p_email;*/
          
          SELECT motorsport_id
          INTO v_m_id
@@ -317,7 +325,5 @@ create or replace package body pkg_user is
               raise_application_error(-20006, 'User does not have this motorsport as favourite motorsport!');
    END delete_fav_motorsport;
 
-
-  
 end pkg_user;
 /
