@@ -21,6 +21,9 @@ create or replace package pkg_race is
                                 
        PROCEDURE edit_motorsport_category(p_title      IN VARCHAR2,
                                           p_motorsport IN VARCHAR2);
+                                          
+       PROCEDURE edit_race_track(p_title IN VARCHAR2,
+                                 p_track IN VARCHAR2);
 
 end pkg_race;
 /
@@ -286,14 +289,22 @@ create or replace package body pkg_race is
         SET motorsport_id=v_m_id
         WHERE title=UPPER(p_title);
       
-      dbms_output.put_line('Track added to race successfully!');
+      dbms_output.put_line('Race motorsport type successfully modified!');
       prc_log(p_log_type => 'I'
-               ,p_message => 'Track added to race successfully!'
+               ,p_message => 'Motorsport type successfully modified!'
                ,p_backtrace => ''
                ,p_parameters => 'p_title=' || p_title || ', p_motorsport=' || p_motorsport
                ,p_api => gc_pkg_name || '.' || c_prc_name);
                
       EXCEPTION
+        WHEN pkg_exception.motorsport_not_found THEN
+          prc_log(p_log_type => 'E'
+                 ,p_message => SQLERRM || 'Motorsport not found!'
+                 ,p_backtrace => dbms_utility.format_error_backtrace
+                 ,p_parameters => 'p_motorsport='|| p_motorsport || ', p_title=' || p_title
+                 ,p_api => gc_pkg_name || '.' || c_prc_name);
+                 
+          raise_application_error(-20004, 'Motorsport not found!');
         WHEN pkg_exception.race_not_found THEN
           prc_log(p_log_type => 'E'
                  ,p_message => SQLERRM || 'Race not found!'
@@ -303,6 +314,76 @@ create or replace package body pkg_race is
                  
           raise_application_error(-20013, 'Race not found!');
    END edit_motorsport_category;
+   
+   
+   PROCEDURE edit_race_track(p_title IN VARCHAR2,
+                             p_track IN VARCHAR2)
+                             IS
+      v_r_id NUMBER;
+      v_t_id NUMBER;
+      v_count_r NUMBER;
+      v_count_t NUMBER;
+      c_prc_name CONSTANT VARCHAR2(30):= 'edit_race_track';
+      BEGIN
+        SELECT COUNT(*)
+        INTO v_count_r
+        FROM race
+        where title=UPPER(p_title);
+        
+        IF v_count_r=0
+          THEN
+            RAISE pkg_exception.race_not_found;
+          ELSE
+            SELECT race_id
+            INTO v_r_id
+            FROM race
+            WHERE title=UPPER(p_title);
+        END IF;
+        
+        SELECT COUNT(*)
+        INTO v_count_t
+        FROM track
+        WHERE track_name=p_track;
+        
+        IF v_count_t=0
+          THEN
+            RAISE pkg_exception.track_not_found;
+          ELSE
+            SELECT track_id
+            INTO v_t_id
+            FROM track
+            WHERE track_name=p_track;
+        END IF;
+        
+        UPDATE race
+        SET track_id=v_t_id
+        WHERE title=UPPER(p_title);
+        COMMIT;
+        
+        dbms_output.put_line('Track successfully added to race event.');
+        prc_log(p_log_type => 'I'
+               ,p_message => 'Track added to race successfully!'
+               ,p_backtrace => ''
+               ,p_parameters => 'p_title=' || p_title || ', p_track=' || p_track
+               ,p_api => gc_pkg_name || '.' || c_prc_name);
+      EXCEPTION
+        WHEN pkg_exception.race_not_found THEN
+          prc_log(p_log_type => 'E'
+                 ,p_message => SQLERRM || 'Race not found!'
+                 ,p_backtrace => dbms_utility.format_error_backtrace
+                 ,p_parameters => 'p_title=' || p_title || ', p_track=' || p_track
+                 ,p_api => gc_pkg_name || '.' || c_prc_name);
+                 
+          raise_application_error(-20013, 'Race not found!');
+        WHEN pkg_exception.track_not_found THEN
+           prc_log(p_log_type => 'E'
+                 ,p_message => SQLERRM || 'Track not found!'
+                 ,p_backtrace => dbms_utility.format_error_backtrace
+                 ,p_parameters => 'p_title=' || p_title || ', p_track=' || p_track
+                 ,p_api => gc_pkg_name || '.' || c_prc_name);
+                 
+          raise_application_error(-20015, 'Track not found!');
+   END edit_race_track;
 
 end pkg_race;
 /
