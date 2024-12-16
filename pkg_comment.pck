@@ -28,7 +28,7 @@ create or replace package body pkg_comment is
       c_prc_name CONSTANT VARCHAR2(30):='post_comment';
       BEGIN
         motorsport_exists(p_motorsport_name => p_motorsport);
-        user_exists(p_email => p_email);
+       v_u_id:= fn_user_exists(p_email => p_email);
         
         SELECT motorsport_id
         INTO v_m_id
@@ -45,10 +45,10 @@ create or replace package body pkg_comment is
             RAISE pkg_exception.news_not_found;
         END IF;
         
-        SELECT user_id
+      /*  SELECT user_id
         INTO v_u_id
         FROM reg_user
-        WHERE email=p_email;
+        WHERE email=p_email;*/
         
         SELECT news_id
         INTO v_news_id
@@ -106,7 +106,7 @@ create or replace package body pkg_comment is
       c_prc_name CONSTANT VARCHAR2(30):='delete_motorsport';
       BEGIN
         motorsport_exists(p_motorsport_name => p_motorsport);
-        user_exists(p_email => p_email);
+       v_u_id:= fn_user_exists(p_email => p_email);
         
         SELECT motorsport_id
         INTO v_m_id
@@ -123,10 +123,10 @@ create or replace package body pkg_comment is
             RAISE pkg_exception.news_not_found;
         END IF;
         
-        SELECT user_id
+       /* SELECT user_id
         INTO v_u_id
         FROM reg_user
-        WHERE email=p_email;
+        WHERE email=p_email;*/
         
         SELECT news_id
         INTO v_news_id
