@@ -89,14 +89,27 @@ create or replace package body pkg_user is
        v_u_id NUMBER;
        BEGIN
          v_u_id:=fn_get_user_id(p_email => p_email);
+          
+         --Mas tablakbol a referenciak NULL-ozasa
+         UPDATE chatroom_messages
+         SET user_id=NULL
+         WHERE user_id=v_u_id;
          
+         UPDATE news
+         SET u_id=NULL
+         WHERE u_id=v_u_id;
+         
+         UPDATE news_comment
+         SET u_id=NULL
+         WHERE u_id=v_u_id;
+         
+         DELETE FROM favored_motorsport
+         WHERE u_id=v_u_id;
+         
+         -- User törlése
          DELETE FROM reg_user
          WHERE user_id=v_u_id;
          
-         --Mas tablakbol a referenciak NULL-ozasa
-        -- UPDATE chatroom_messages
-        -- SET USER_ID=NULL
-        -- WHERE USER_ID=
          COMMIT;
        
        dbms_output.put_line('User deleted successfully!');
@@ -217,7 +230,7 @@ create or replace package body pkg_user is
         v_u_id:= fn_get_user_id(p_email => p_email);
         v_m_id:=fn_get_motorsport_id(p_motorsport_name => p_motorsport);
 
-      /*   SELECT user_id
+      /* SELECT user_id
          INTO v_u_id
          FROM reg_user
          WHERE email=p_email;

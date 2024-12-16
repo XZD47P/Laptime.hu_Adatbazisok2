@@ -111,7 +111,7 @@ COMMENT ON TABLE webpage_admin.chatroom
 
 CREATE TABLE race(
        race_id              NUMBER          NOT NULL
-      ,motorsport_id        NUMBER          NOT NULL
+      ,motorsport_id        NUMBER          
       ,title                VARCHAR2(255)   NOT NULL
       ,track_id             NUMBER          
       ,race_date_start      DATE            NOT NULL
