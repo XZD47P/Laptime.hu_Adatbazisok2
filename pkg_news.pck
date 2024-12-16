@@ -29,13 +29,13 @@ create or replace package body pkg_news is
        v_m_id NUMBER;
        c_prc_name CONSTANT VARCHAR2(30):= 'add_news';
        BEGIN
-         user_exists(p_email => p_email);
+         v_u_id:= fn_user_exists(p_email => p_email);
          motorsport_exists(p_motorsport_name => p_motorsport);
          
-         SELECT user_id
+         /*SELECT user_id
          INTO v_u_id
          FROM reg_user
-         WHERE email=p_email;
+         WHERE email=p_email;*/
          
          SELECT motorsport_id
          INTO v_m_id
@@ -81,13 +81,13 @@ create or replace package body pkg_news is
        v_news_count NUMBER;
        c_prc_name CONSTANT VARCHAR2(30):= 'delete_news';
        BEGIN
-         user_exists(p_email => p_email);
+        v_u_id:= fn_user_exists(p_email => p_email);
          motorsport_exists(p_motorsport_name => p_motorsport);
          
-         SELECT user_id
+        /* SELECT user_id
          INTO v_u_id
          FROM reg_user
-         WHERE email=p_email;
+         WHERE email=p_email;*/
          
          SELECT motorsport_id
          INTO v_m_id
@@ -151,13 +151,13 @@ create or replace package body pkg_news is
        v_news_count NUMBER;
        c_prc_name CONSTANT VARCHAR2(30):= 'publish_news';      
        BEGIN
-         user_exists(p_email => p_email);
+        v_u_id:= fn_user_exists(p_email => p_email);
          motorsport_exists(p_motorsport_name => p_motorsport);
          
-         SELECT user_id
+        /* SELECT user_id
          INTO v_u_id
          FROM reg_user
-         WHERE email=p_email;
+         WHERE email=p_email;*/
          
          SELECT motorsport_id
          INTO v_m_id
