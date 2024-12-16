@@ -53,6 +53,22 @@ create or replace package body pkg_motorsport is
        BEGIN
          v_m_id:=fn_get_motorsport_id(p_motorsport_name => p_name);
          
+         --Mas tablakban referncia NULL-ra allitasa
+         UPDATE news
+         SET motorsport_category=NULL
+         WHERE motorsport_category=v_m_id;
+         
+         DELETE FROM favored_motorsport
+         WHERE motorsport_id=v_m_id;
+         
+         UPDATE race
+         SET motorsport_id=NULL
+         WHERE motorsport_id=v_m_id;
+         
+         UPDATE chatroom
+         SET motorsport_category=NULL
+         WHERE motorsport_category=v_m_id;
+         --Motorsport torlese
          DELETE FROM motorsport
          WHERE motorsport_id=v_m_id;
          COMMIT;
