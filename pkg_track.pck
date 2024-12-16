@@ -58,6 +58,7 @@ create or replace package body pkg_track is
    PROCEDURE delete_track(p_track_name VARCHAR2)
                           IS
       v_count NUMBER;
+      v_t_id NUMBER;
       c_prc_name CONSTANT VARCHAR2(30):= 'delete_track';
       BEGIN
         SELECT COUNT(*)
@@ -68,10 +69,21 @@ create or replace package body pkg_track is
         IF v_count=0
           THEN
             RAISE pkg_exception.track_not_found;
+          ELSE
+            SELECT track_id
+            INTO v_t_id
+            FROM track
+            WHERE track_name=LOWER(p_track_name);
         END IF;
         
+        --Palya levalasztasa a versenyrol
+        UPDATE RACE
+        SET track_id=NULL
+        WHERE track_id=v_t_id;
+        
+        --Palya torlese
         DELETE FROM track
-        WHERE track_name=LOWER(p_track_name);
+        WHERE track_id=v_t_id;
         COMMIT;
         
         dbms_output.put_line('Track deleted successfully!');
