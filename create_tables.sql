@@ -56,10 +56,10 @@ COMMENT ON TABLE webpage_admin.favored_motorsport
         
 CREATE TABLE news(
        news_id                NUMBER       NOT NULL
-      ,u_id                   NUMBER       NOT NULL 
+      ,u_id                   NUMBER        
       ,title                  varchar2(255) NOT NULL
       ,news_description       NCLOB        NOT NULL
-      ,motorsport_category    NUMBER       NOT NULL
+      ,motorsport_category    NUMBER       
       ,published              NUMBER(1)    DEFAULT 0 NOT NULL
       ,modified_at            DATE         DEFAULT SYSDATE NOT NULL 
       ,modified_by            varchar2(50)
@@ -76,8 +76,8 @@ COMMENT ON TABLE webpage_admin.news
       
 CREATE TABLE news_comment(
        comment_id     NUMBER         NOT NULL
-      ,u_id           NUMBER         NOT NULL
-      ,news_id        NUMBER         NOT NULL
+      ,u_id           NUMBER         
+      ,news_id        NUMBER         
       ,n_comment      VARCHAR2(255)  NOT NULL
       ,modified_at    DATE         DEFAULT SYSDATE NOT NULL 
       ,modified_by    varchar2(50)
@@ -95,7 +95,7 @@ COMMENT ON TABLE webpage_admin.news_comment
 CREATE TABLE chatroom(
        chatroom_id      NUMBER          NOT NULL
       ,chatroom_name    VARCHAR2(50)    NOT NULL
-      ,motorsport_category NUMBER       NOT NULL
+      ,motorsport_category NUMBER       
       ,modified_at      DATE            DEFAULT SYSDATE NOT NULL 
       ,modified_by      varchar2(50)
       ,created_at       DATE            DEFAULT SYSDATE NOT NULL  
@@ -113,7 +113,7 @@ CREATE TABLE race(
        race_id              NUMBER          NOT NULL
       ,motorsport_id        NUMBER          NOT NULL
       ,title                VARCHAR2(255)   NOT NULL
-      ,track_id             NUMBER          NOT NULL
+      ,track_id             NUMBER          
       ,race_date_start      DATE            NOT NULL
       ,race_date_end        DATE            NOT NULL
       ,air_temperature      NUMBER
@@ -170,8 +170,8 @@ COMMENT ON TABLE webpage_admin.race
       
 CREATE TABLE chatroom_messages(
        message_id     NUMBER          NOT NULL
-      ,chatroom_id    NUMBER          NOT NULL
-      ,user_id        NUMBER          NOT NULL
+      ,chatroom_id    NUMBER          
+      ,user_id        NUMBER          
       ,message        VARCHAR2(2000)  NOT NULL
       ,created_at     DATE            DEFAULT SYSDATE NOT NULL
 )TABLESPACE users;
