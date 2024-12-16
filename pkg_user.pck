@@ -88,7 +88,7 @@ create or replace package body pkg_user is
        c_prc_name CONSTANT VARCHAR2(30):='delete_user';
        v_u_id NUMBER;
        BEGIN
-         v_u_id:=fn_user_exists(p_email => p_email);
+         v_u_id:=fn_get_user_id(p_email => p_email);
          
          DELETE FROM reg_user
          WHERE user_id=v_u_id;
@@ -127,7 +127,7 @@ create or replace package body pkg_user is
        v_enc_new_passw  RAW(2000);
        c_prc_name CONSTANT VARCHAR2(30):= 'update_password';       
        BEGIN
-         v_u_id:=fn_user_exists(p_email => p_email);
+         v_u_id:=fn_get_user_id(p_email => p_email);
          
          v_enc_curr_passw:= pkg_cipher.encrypt(p_plain_password => p_curr_password);
          
@@ -182,7 +182,7 @@ create or replace package body pkg_user is
        v_u_id NUMBER;
        c_prc_name CONSTANT VARCHAR2(30):= 'change_role';         
        BEGIN
-         v_u_id:=fn_user_exists(p_email => p_email);
+         v_u_id:=fn_get_user_id(p_email => p_email);
          
          UPDATE reg_user
          SET user_role=p_role
@@ -214,7 +214,7 @@ create or replace package body pkg_user is
        v_m_id NUMBER;
        c_prc_name CONSTANT VARCHAR2(30):= 'add_fav_motorsport';
        BEGIN
-        v_u_id:= fn_user_exists(p_email => p_email);
+        v_u_id:= fn_get_user_id(p_email => p_email);
          motorsport_exists(p_motorsport_name => p_motorsport);
 
       /*   SELECT user_id
@@ -265,7 +265,7 @@ create or replace package body pkg_user is
        v_fav_count NUMBER;
        c_prc_name CONSTANT VARCHAR2(30):= 'delete_fav_motorsport';                 
        BEGIN
-        v_u_id := fn_user_exists(p_email => p_email);
+        v_u_id := fn_get_user_id(p_email => p_email);
          motorsport_exists(p_motorsport_name => p_motorsport);
          
         /* SELECT user_id

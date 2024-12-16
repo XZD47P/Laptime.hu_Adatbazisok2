@@ -1,4 +1,4 @@
-create or replace function fn_user_exists(p_email IN  VARCHAR2) 
+create or replace function fn_get_user_id(p_email IN  VARCHAR2) 
                            return number is
   v_count NUMBER;
   v_u_id number;
@@ -19,5 +19,5 @@ begin
   END IF;  
   
   return v_u_id;
-end fn_user_exists;
+end fn_get_user_id;
 /

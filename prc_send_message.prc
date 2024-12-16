@@ -7,7 +7,7 @@ v_u_id NUMBER;
 v_c_id NUMBER;
 c_proc_name CONSTANT VARCHAR2(30):='prc_send_message';
 BEGIN
-  v_u_id:= fn_user_exists(p_email => p_email);
+  v_u_id:= fn_get_user_id(p_email => p_email);
   
   /*SELECT user_id
   INTO v_u_id

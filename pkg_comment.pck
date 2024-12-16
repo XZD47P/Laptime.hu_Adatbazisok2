@@ -28,7 +28,7 @@ create or replace package body pkg_comment is
       c_prc_name CONSTANT VARCHAR2(30):='post_comment';
       BEGIN
         motorsport_exists(p_motorsport_name => p_motorsport);
-       v_u_id:= fn_user_exists(p_email => p_email);
+       v_u_id:= fn_get_user_id(p_email => p_email);
         
         SELECT motorsport_id
         INTO v_m_id
@@ -106,7 +106,7 @@ create or replace package body pkg_comment is
       c_prc_name CONSTANT VARCHAR2(30):='delete_motorsport';
       BEGIN
         motorsport_exists(p_motorsport_name => p_motorsport);
-       v_u_id:= fn_user_exists(p_email => p_email);
+       v_u_id:= fn_get_user_id(p_email => p_email);
         
         SELECT motorsport_id
         INTO v_m_id
