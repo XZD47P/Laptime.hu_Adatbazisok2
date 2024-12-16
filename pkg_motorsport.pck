@@ -48,21 +48,13 @@ create or replace package body pkg_motorsport is
        
        PROCEDURE delete_motorsport(p_name VARCHAR2)
                  IS
-       v_count NUMBER;
+       v_m_id NUMBER;
        c_prc_name CONSTANT VARCHAR2(30):= 'delete.motorsport';
        BEGIN
-         SELECT COUNT(*)
-         INTO v_count
-         FROM motorsport m
-         WHERE motorsport_name=LOWER(p_name);
-         
-         IF v_count=0
-          THEN
-            RAISE pkg_exception.motorsport_not_found;
-         END IF;
+         v_m_id:=fn_get_motorsport_id(p_motorsport_name => p_name);
          
          DELETE FROM motorsport
-         WHERE motorsport_name=LOWER(p_name);
+         WHERE motorsport_id=v_m_id;
          COMMIT;
          
          dbms_output.put_line('Motorsport deleted successfully!');

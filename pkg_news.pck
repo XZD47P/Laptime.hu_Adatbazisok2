@@ -30,17 +30,17 @@ create or replace package body pkg_news is
        c_prc_name CONSTANT VARCHAR2(30):= 'add_news';
        BEGIN
          v_u_id:= fn_get_user_id(p_email => p_email);
-         motorsport_exists(p_motorsport_name => p_motorsport);
+         v_m_id:=fn_get_motorsport_id(p_motorsport_name => p_motorsport);
          
          /*SELECT user_id
          INTO v_u_id
          FROM reg_user
-         WHERE email=p_email;*/
+         WHERE email=p_email;
          
          SELECT motorsport_id
          INTO v_m_id
          FROM motorsport
-         WHERE motorsport_name=LOWER(p_motorsport);
+         WHERE motorsport_name=LOWER(p_motorsport);*/
          
          INSERT INTO NEWS(U_ID,MOTORSPORT_CATEGORY,TITLE,NEWS_DESCRIPTION)
          VALUES(v_u_id,v_m_id,p_title,to_clob(p_description));
@@ -82,17 +82,17 @@ create or replace package body pkg_news is
        c_prc_name CONSTANT VARCHAR2(30):= 'delete_news';
        BEGIN
         v_u_id:= fn_get_user_id(p_email => p_email);
-         motorsport_exists(p_motorsport_name => p_motorsport);
+        v_m_id:=fn_get_motorsport_id(p_motorsport_name => p_motorsport);
          
         /* SELECT user_id
          INTO v_u_id
          FROM reg_user
-         WHERE email=p_email;*/
+         WHERE email=p_email;
          
          SELECT motorsport_id
          INTO v_m_id
          FROM motorsport
-         WHERE motorsport_name=LOWER(p_motorsport);
+         WHERE motorsport_name=LOWER(p_motorsport);*/
          
          SELECT COUNT(*)
          INTO v_news_count
@@ -152,17 +152,17 @@ create or replace package body pkg_news is
        c_prc_name CONSTANT VARCHAR2(30):= 'publish_news';      
        BEGIN
         v_u_id:= fn_get_user_id(p_email => p_email);
-         motorsport_exists(p_motorsport_name => p_motorsport);
+        v_m_id:=fn_get_motorsport_id(p_motorsport_name => p_motorsport);
          
         /* SELECT user_id
          INTO v_u_id
          FROM reg_user
-         WHERE email=p_email;*/
+         WHERE email=p_email;
          
          SELECT motorsport_id
          INTO v_m_id
          FROM motorsport
-         WHERE motorsport_name=LOWER(p_motorsport);
+         WHERE motorsport_name=LOWER(p_motorsport);*/
          
          SELECT COUNT(*)
          INTO v_news_count

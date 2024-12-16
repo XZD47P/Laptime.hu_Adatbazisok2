@@ -215,17 +215,17 @@ create or replace package body pkg_user is
        c_prc_name CONSTANT VARCHAR2(30):= 'add_fav_motorsport';
        BEGIN
         v_u_id:= fn_get_user_id(p_email => p_email);
-         motorsport_exists(p_motorsport_name => p_motorsport);
+        v_m_id:=fn_get_motorsport_id(p_motorsport_name => p_motorsport);
 
       /*   SELECT user_id
          INTO v_u_id
          FROM reg_user
-         WHERE email=p_email;*/
+         WHERE email=p_email;
          
          SELECT motorsport_id
          INTO v_m_id
          FROM motorsport
-         WHERE motorsport_name=LOWER(p_motorsport);
+         WHERE motorsport_name=LOWER(p_motorsport);*/
 
          INSERT INTO favored_motorsport(u_id,motorsport_id)
          VALUES (v_u_id,v_m_id);
@@ -266,17 +266,17 @@ create or replace package body pkg_user is
        c_prc_name CONSTANT VARCHAR2(30):= 'delete_fav_motorsport';                 
        BEGIN
         v_u_id := fn_get_user_id(p_email => p_email);
-         motorsport_exists(p_motorsport_name => p_motorsport);
+        v_m_id:=fn_get_motorsport_id(p_motorsport_name => p_motorsport);
          
         /* SELECT user_id
          INTO v_u_id
          FROM reg_user
-         WHERE email=p_email;*/
+         WHERE email=p_email;
          
          SELECT motorsport_id
          INTO v_m_id
          FROM motorsport
-         WHERE motorsport_name=LOWER(p_motorsport);
+         WHERE motorsport_name=LOWER(p_motorsport);*/
          
          SELECT COUNT(*)
          INTO v_fav_count

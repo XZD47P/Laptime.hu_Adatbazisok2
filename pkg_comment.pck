@@ -27,13 +27,13 @@ create or replace package body pkg_comment is
       v_count   NUMBER;
       c_prc_name CONSTANT VARCHAR2(30):='post_comment';
       BEGIN
-        motorsport_exists(p_motorsport_name => p_motorsport);
+       v_m_id:=fn_get_motorsport_id(p_motorsport_name => p_motorsport);
        v_u_id:= fn_get_user_id(p_email => p_email);
         
-        SELECT motorsport_id
+        /*SELECT motorsport_id
         INTO v_m_id
         FROM motorsport
-        WHERE motorsport_name=LOWER(p_motorsport);
+        WHERE motorsport_name=LOWER(p_motorsport);*/
         
         SELECT COUNT(*)
         INTO v_count
@@ -105,13 +105,13 @@ create or replace package body pkg_comment is
       v_comment_id NUMBER;
       c_prc_name CONSTANT VARCHAR2(30):='delete_motorsport';
       BEGIN
-        motorsport_exists(p_motorsport_name => p_motorsport);
+       v_m_id:=fn_get_motorsport_id(p_motorsport_name => p_motorsport);
        v_u_id:= fn_get_user_id(p_email => p_email);
         
-        SELECT motorsport_id
+        /*SELECT motorsport_id
         INTO v_m_id
         FROM motorsport
-        WHERE motorsport_name=LOWER(p_motorsport);
+        WHERE motorsport_name=LOWER(p_motorsport);*/
         
         SELECT COUNT(*)
         INTO v_count

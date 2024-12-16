@@ -45,12 +45,12 @@ create or replace package body pkg_race is
       v_track_id NUMBER;
       c_prc_name CONSTANT VARCHAR2(30):= 'add_race';
       BEGIN
-        motorsport_exists(p_motorsport_name => p_motorsport);
+        v_m_id:=fn_get_motorsport_id(p_motorsport_name => p_motorsport);
         
-        SELECT motorsport_id
+       /* SELECT motorsport_id
         INTO v_m_id
         FROM motorsport
-        WHERE motorsport_name=LOWER(p_motorsport);
+        WHERE motorsport_name=LOWER(p_motorsport);*/
         
         SELECT COUNT(*)
         INTO v_race_count
@@ -166,12 +166,12 @@ create or replace package body pkg_race is
       v_m_id NUMBER;
       c_prc_name CONSTANT VARCHAR2(30):= 'delete_race';
       BEGIN
-        motorsport_exists(p_motorsport_name => p_motorsport);
+        v_m_id:=fn_get_motorsport_id(p_motorsport_name => p_motorsport);
         
-        SELECT motorsport_id
+        /*SELECT motorsport_id
         INTO v_m_id
         FROM motorsport
-        WHERE motorsport_name=LOWER(p_motorsport);
+        WHERE motorsport_name=LOWER(p_motorsport);*/
         
         SELECT COUNT(*)
         INTO v_count
@@ -222,12 +222,12 @@ create or replace package body pkg_race is
       v_m_id NUMBER;
       c_prc_name CONSTANT VARCHAR2(30):= 'edit_race_date';
       BEGIN
-        motorsport_exists(p_motorsport_name => p_motorsport);
+        v_m_id:=fn_get_motorsport_id(p_motorsport_name => p_motorsport);
         
-        SELECT motorsport_id
+       /* SELECT motorsport_id
         INTO v_m_id
         FROM motorsport
-        WHERE motorsport_name=LOWER(p_motorsport);
+        WHERE motorsport_name=LOWER(p_motorsport);*/
         
         SELECT COUNT(*)
         INTO v_count
