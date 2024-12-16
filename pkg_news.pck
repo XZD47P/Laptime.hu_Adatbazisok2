@@ -6,6 +6,10 @@ create or replace package pkg_news is
                           p_description IN VARCHAR2);
        
        PROCEDURE delete_news(p_title IN VARCHAR2);
+       
+       PROCEDURE edit_news_param(p_title IN VARCHAR2,
+                                 p_email IN VARCHAR2,
+                                 p_motorsport IN VARCHAR2);
 
        PROCEDURE publish_news(p_email IN VARCHAR2,
                               p_motorsport IN VARCHAR2,
@@ -119,6 +123,49 @@ create or replace package body pkg_news is
    END delete_news;
        
        
+   PROCEDURE edit_news_param(p_title IN VARCHAR2,
+                             p_email IN VARCHAR2,
+                             p_motorsport IN VARCHAR2)
+                             IS
+      v_u_id NUMBER;
+      v_m_id NUMBER;
+      c_prc_name CONSTANT VARCHAR2(30):= 'edit_news_param';
+      BEGIN
+        v_u_id:= fn_get_user_id(p_email => p_email);
+        v_m_id:= fn_get_motorsport_id(p_motorsport_name => p_motorsport);
+        
+        UPDATE news
+        SET u_id=v_u_id,motorsport_category=v_m_id
+        WHERE title=p_title;
+        COMMIT;
+        
+        dbms_output.put_line('News successfully updated!');
+        prc_log(p_log_type => 'I'
+                ,p_message => 'News deleted successfully!'
+                ,p_backtrace => ''
+                ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                ,p_api => gc_pkg_name || '.' || c_prc_name);
+      EXCEPTION
+        WHEN pkg_exception.user_not_found THEN
+          prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'User not found!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
+              raise_application_error(-20005,'User not found');
+        WHEN pkg_exception.motorsport_not_found THEN
+          prc_log(p_log_type => 'E'
+                  ,p_message => SQLERRM || 'Motorsport not found!'
+                  ,p_backtrace => dbms_utility.format_error_backtrace
+                  ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                  
+              raise_application_error(-20004, 'Motorsport not found!');
+   
+   END edit_news_param;    
+   
+   
    PROCEDURE publish_news(p_email IN VARCHAR2,
                           p_motorsport IN VARCHAR2,
                           P_title IN VARCHAR2)
