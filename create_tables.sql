@@ -77,7 +77,7 @@ COMMENT ON TABLE webpage_admin.news
 CREATE TABLE news_comment(
        comment_id     NUMBER         NOT NULL
       ,u_id           NUMBER         
-      ,news_id        NUMBER         
+      ,news_id        NUMBER         NOT NULL
       ,n_comment      VARCHAR2(255)  NOT NULL
       ,modified_at    DATE         DEFAULT SYSDATE NOT NULL 
       ,modified_by    varchar2(50)
