@@ -77,7 +77,7 @@ create or replace package body pkg_race is
         INTO v_track_id
         FROM track
         WHERE track_name LIKE '%' ||LOWER(p_track) || '%';
-        --TODO: HIBAKEZELÉS
+        
         
         INSERT INTO race(motorsport_id,
                          title,
@@ -143,7 +143,19 @@ create or replace package body pkg_race is
                                 || ', p_air_temp=' || p_air_temp || ', p_asp_temp=' || p_asp_temp || ', p_wind_strength=' || p_wind_strenght
                                 || ', p_rain_percentage=' || p_rain_percent
                  ,p_api => gc_pkg_name || '.' || c_prc_name);
+                 
           raise_application_error(-20011, 'There is a race already registered to that date for this series!');
+        WHEN NO_DATA_FOUND THEN
+          prc_log(p_log_type => 'E'
+                 ,p_message => SQLERRM || 'Track not found!'
+                 ,p_backtrace => dbms_utility.format_error_backtrace
+                 ,p_parameters => 'p_motorsport='|| p_motorsport || ', p_title=' || p_title || ', p_track=' || p_track
+                                || ', p_start_date=' || p_start_date || ', p_end_date=' || p_end_date || ', p_record_time=' || p_record_time
+                                || ', p_air_temp=' || p_air_temp || ', p_asp_temp=' || p_asp_temp || ', p_wind_strength=' || p_wind_strenght
+                                || ', p_rain_percentage=' || p_rain_percent
+                 ,p_api => gc_pkg_name || '.' || c_prc_name);
+                 
+          raise_application_error(-20015, 'Race track not found! Please create it before adding an event!');
    END add_race;
    
    
