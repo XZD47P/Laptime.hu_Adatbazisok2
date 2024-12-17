@@ -150,17 +150,27 @@ end pkg_exception;
 
 PROMPT Exceptions created!
 -------------------------------------
+PROMPT Creating logging procedure...
+
+@prc_log.prc
+
+PROMPT Procedure created!
+-------------------------------------
 PROMPT Creating functions...
 
+PROMPT fn_get_motorsport_id
 @fn_get_motorsport_id.fnc
+
+PROMPT fn_get_user_id
 @fn_get_user_id.fnc
+
+PROMPT fn_time_to_milliseconds
 @fn_time_to_milliseconds.fnc
 
 PROMPT Functions created!
 -------------------------------------
 PROMPT Creating procedures...
 
-@prc_log.prc
 @prc_send_message.prc
 
 PROMPT Procedures created!
@@ -185,4 +195,4 @@ PROMPT Creating Views...
 @views.sql
 
 PROMPT Views created successfully!
-PROMPT Database initalized successfully!
+PROMPT Database initalized successfully! Please log in with webpage_admin.
