@@ -116,6 +116,7 @@ BEGIN
     THEN
       :new.chatroom_id := chatroom_seq.nextval;
     END IF;
+    :new.chatroom_name:=LOWER(:new.chatroom_name);
     :new.created_by:=sys_context('USERENV', 'OS_USER');
   END IF;
   
@@ -124,6 +125,7 @@ BEGIN
     :new.modified_by:= sys_context('USERENV', 'OS_USER');
   END IF;
 END chatroom_trg;
+
 /
 CREATE OR REPLACE TRIGGER chatroom_msg_trg
   BEFORE INSERT ON chatroom_messages
