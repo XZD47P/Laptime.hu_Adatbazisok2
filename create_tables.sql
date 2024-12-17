@@ -197,9 +197,6 @@ CREATE TABLE reg_user_h(
       ,modified_at     DATE         DEFAULT SYSDATE NOT NULL 
       ,modified_by     varchar2(50)
 )TABLESPACE users;
-
-ALTER TABLE reg_user_h
-      ADD CONSTRAINT reg_user_h_pk PRIMARY KEY (user_id);
       
 CREATE TABLE race_h(
        race_id              NUMBER          NOT NULL
@@ -218,6 +215,3 @@ CREATE TABLE race_h(
       ,modified_at          DATE            DEFAULT SYSDATE NOT NULL 
       ,modified_by          varchar2(50)
 )TABLESPACE users;
-
-ALTER TABLE race_h
-      ADD CONSTRAINT race_h_pk PRIMARY KEY (race_id);
