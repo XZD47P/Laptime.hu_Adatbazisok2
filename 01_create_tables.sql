@@ -16,7 +16,12 @@ CREATE TABLE reg_user(
 
 ALTER TABLE reg_user
       ADD CONSTRAINT reg_user_pk PRIMARY KEY (user_id)
-      ADD CONSTRAINT user_email_check CHECK (INSTR(email, '@') > 0);
+      ADD CONSTRAINT user_email_check CHECK (INSTR(email, '@') > 1
+                                             AND INSTR(email, '@') < LENGTH(email)
+                                             AND INSTR(email, '.') > 1
+                                             AND INSTR(email, '.') < LENGTH(email)
+                                             AND INSTR(email, '@.') = 0
+                                             AND INSTR(email, '.@') = 0);
      
 COMMENT ON TABLE webpage_admin.reg_user 
         IS 'Registered users of the webpage';
