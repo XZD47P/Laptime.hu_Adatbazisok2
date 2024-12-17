@@ -95,7 +95,7 @@ BEGIN
     THEN
       :new.motorsport_id := motorsport_seq.nextval;
     END IF;
-    
+    :new.motorsport_name:=LOWER(:new.motorsport_name);
     :new.created_by:=sys_context('USERENV', 'OS_USER');
   END IF;
       
@@ -147,6 +147,7 @@ BEGIN
     THEN
       :new.race_id := race_seq.nextval;
     END IF;
+    :new.title:=UPPER(:new.title);
     :new.created_by:=sys_context('USERENV', 'OS_USER');
   END IF;
   
