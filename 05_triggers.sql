@@ -256,6 +256,7 @@ BEGIN
   THEN
     :new.log_id := log_seq.nextval;
   END IF;
+  :new.created_by := sys_context('USERENV', 'OS_USER');
 END trg_log;
 
 
