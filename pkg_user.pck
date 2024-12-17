@@ -80,6 +80,16 @@ create or replace package body pkg_user is
                   ,p_api => gc_pkg_name || '.' || c_prc_name);
                   
              raise_application_error(-20001, 'User already registered!');    
+          WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_first_name=' || p_first_name || ', p_last_name=' || p_last_name || ', p_email=' || p_email
+                             || 'p_fav_driver=' || p_fav_driver || ', p_fav_team=' || p_fav_team || ', p_user_role=' || p_user_role
+                             || ', p_email_subscription=' || p_email_subscription
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
     END add_user;
        
        
@@ -127,6 +137,14 @@ create or replace package body pkg_user is
                 ,p_api => gc_pkg_name || '.' || c_prc_name);
                 
               raise_application_error(-20005,'User not found');
+       WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_email=' || p_email
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END delete_user;
        
        
@@ -186,6 +204,14 @@ create or replace package body pkg_user is
                   ,p_api => gc_pkg_name || '.' || c_prc_name);
                   
            raise_application_error(-20002, 'Email address or password is not correct!');     
+         WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_email=' || p_email
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END update_password;
          
 
@@ -217,6 +243,14 @@ create or replace package body pkg_user is
                   ,p_api => gc_pkg_name || '.' || c_prc_name);
                   
               raise_application_error(-20005,'User not found');  
+         WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_email=' || p_email
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END change_role;           
 
 
@@ -267,6 +301,14 @@ create or replace package body pkg_user is
                   ,p_api => gc_pkg_name || '.' || c_prc_name);
                   
               raise_application_error(-20004, 'Motorsport not found!');  
+         WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END add_fav_motorsport;
        
 
@@ -336,6 +378,14 @@ create or replace package body pkg_user is
                   ,p_api => gc_pkg_name || '.' || c_prc_name);
                   
               raise_application_error(-20006, 'User does not have this motorsport as favourite motorsport!');
+         WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END delete_fav_motorsport;
 
 end pkg_user;

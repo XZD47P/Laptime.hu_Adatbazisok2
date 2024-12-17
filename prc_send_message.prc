@@ -59,7 +59,14 @@ EXCEPTION
            ,p_api => c_proc_name);
            
     raise_application_error(-20009 ,'Chatroom does not exist!');
-
+   WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_chatroom_name:=' || p_chatroom_name || ', p_email:=' || p_email || ', p_message=' || p_message
+                   ,p_api => c_proc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
     
 END send_message;
 /

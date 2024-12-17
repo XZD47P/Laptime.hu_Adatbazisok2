@@ -1,5 +1,8 @@
 create or replace package pkg_exception is
 
+       unexpected_error EXCEPTION;
+       PRAGMA EXCEPTION_INIT(unexpected_error, -20000);
+       
        user_already_exists EXCEPTION;
        PRAGMA EXCEPTION_INIT(user_already_exists, -20001);
        

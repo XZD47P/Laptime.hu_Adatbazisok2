@@ -161,6 +161,17 @@ create or replace package body pkg_race is
                  ,p_api => gc_pkg_name || '.' || c_prc_name);
                  
           raise_application_error(-20015, 'Race track not found! Please create it before adding an event!');
+        WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_motorsport='|| p_motorsport || ', p_title=' || p_title || ', p_track=' || p_track
+                                || ', p_start_date=' || p_start_date || ', p_end_date=' || p_end_date || ', p_record_time=' || p_record_time
+                                || ', p_air_temp=' || p_air_temp || ', p_asp_temp=' || p_asp_temp || ', p_wind_strength=' || p_wind_strenght
+                                || ', p_rain_percentage=' || p_rain_percent
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END add_race;
    
    
@@ -215,6 +226,14 @@ create or replace package body pkg_race is
                  ,p_api => gc_pkg_name || '.' || c_prc_name);
                  
           raise_application_error(-20013, 'Race not found!');
+        WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_motorsport='|| p_motorsport || ', p_title=' || p_title
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END delete_race;
    
    
@@ -257,6 +276,14 @@ create or replace package body pkg_race is
                  ,p_api => gc_pkg_name || '.' || c_prc_name);
                  
           raise_application_error(-20004, 'Motorsport not found!');
+        WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_title=' || p_title || ', p_new_start_date=' || p_new_start_date || ', p_new_end_date=' || p_new_end_date
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END edit_race_date;
    
    
@@ -313,6 +340,14 @@ create or replace package body pkg_race is
                  ,p_api => gc_pkg_name || '.' || c_prc_name);
                  
           raise_application_error(-20013, 'Race not found!');
+        WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_title=' || p_title || ', p_motorsport=' || p_motorsport
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END edit_motorsport_category;
    
    
@@ -383,6 +418,14 @@ create or replace package body pkg_race is
                  ,p_api => gc_pkg_name || '.' || c_prc_name);
                  
           raise_application_error(-20015, 'Track not found!');
+        WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_title=' || p_title || ', p_track=' || p_track
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END edit_race_track;
 
 end pkg_race;

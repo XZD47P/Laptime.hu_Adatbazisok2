@@ -42,7 +42,15 @@ create or replace package body pkg_motorsport is
                   ,p_backtrace => dbms_utility.format_error_backtrace
                   ,p_parameters => 'p_name=' || p_name
                   ,p_api => gc_pkg_name || '.' || c_prc_name);
-           raise_application_error(-20003, 'Motorsport is already on the list!');  
+           raise_application_error(-20003, 'Motorsport is already on the list!');
+         WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_name=' || p_name
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');  
        END add_motorsport;
        
        
@@ -86,7 +94,15 @@ create or replace package body pkg_motorsport is
                   ,p_backtrace => dbms_utility.format_error_backtrace
                   ,p_parameters => 'p_name=' || p_name
                   ,p_api => gc_pkg_name || '.' || c_prc_name);
-           raise_application_error(-20004, 'Motorsport not found!');  
+           raise_application_error(-20004, 'Motorsport not found!');
+         WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_name=' || p_name
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');  
        END delete_motorsport;
 end pkg_motorsport;
 /

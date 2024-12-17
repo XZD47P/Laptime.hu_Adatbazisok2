@@ -71,6 +71,14 @@ create or replace package body pkg_news is
                   ,p_api => gc_pkg_name || '.' || c_prc_name);
                   
               raise_application_error(-20004, 'Motorsport not found!');
+         WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');  
    END add_news;
    
    
@@ -120,6 +128,14 @@ create or replace package body pkg_news is
                   ,p_api => gc_pkg_name || '.' || c_prc_name);
                   
               raise_application_error(-20007,'News not found with these parameters!');  
+         WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_title=' || p_title
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');   
    END delete_news;
        
        
@@ -162,7 +178,14 @@ create or replace package body pkg_news is
                   ,p_api => gc_pkg_name || '.' || c_prc_name);
                   
               raise_application_error(-20004, 'Motorsport not found!');
-   
+        WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');  
    END edit_news_param;    
    
    
@@ -234,6 +257,14 @@ create or replace package body pkg_news is
                   ,p_api => gc_pkg_name || '.' || c_prc_name);
                   
               raise_application_error(-20007,'News not found with these parameters!');  
+         WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_email=' || p_email || ', p_motorsport=' || p_motorsport || ', p_title=' || p_title
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');  
    END publish_news;
                 
 end pkg_news;

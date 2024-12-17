@@ -90,6 +90,14 @@ create or replace package body pkg_comment is
                  ,p_api => gc_pkg_name || '.' || c_prc_name);
                  
           raise_application_error(-20007, 'News not found with these parameters!');
+        WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_news_title=' || p_news_title || ', p_motorsport=' || p_motorsport || ', p_email=' || p_email || ', p_comment=' || p_comment
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END post_comment;
    
    
@@ -181,6 +189,14 @@ create or replace package body pkg_comment is
                  ,p_api => gc_pkg_name || '.' || c_prc_name);
                  
           raise_application_error(-20016,'Comment not found!');
+        WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_news_title=' || p_news_title || ', p_motorsport=' || p_motorsport || ', p_email=' || p_email || ', p_comment=' || p_comment
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END delete_comment;
 
 end pkg_comment;

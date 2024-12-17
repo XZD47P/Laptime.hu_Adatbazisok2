@@ -61,7 +61,15 @@ create or replace package body pkg_chatroom is
                  ,p_parameters => 'p_name=' || p_name || ', p_motorsport=' || p_motorsport
                  ,p_api => gc_pkg_name || '.' || c_prc_name);
            
-           raise_application_error(-20008, 'Chatroom already exists with these details!');     
+           raise_application_error(-20008, 'Chatroom already exists with these details!');
+         WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_name=' || p_name
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');     
    END create_chatroom;
    
    
@@ -110,6 +118,15 @@ create or replace package body pkg_chatroom is
                    ,p_api => gc_pkg_name || '.' || c_prc_name);
            
             raise_application_error(-20009, 'Chatroom not found!');
+            
+          WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_name=' || p_name
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
       END delete_chatroom;                           
 
 end pkg_chatroom;

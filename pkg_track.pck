@@ -52,6 +52,14 @@ create or replace package body pkg_track is
                  ,p_api => gc_pkg_name || '.' || c_prc_name);
                  
           raise_application_error(-20014, 'Race track already in database!');
+        WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_track_name=' || p_track_name || ', p_country=' || p_country || ', p_layout=' || p_layout
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END add_track;
    
    
@@ -101,6 +109,14 @@ create or replace package body pkg_track is
                  ,p_api => gc_pkg_name || '.' || c_prc_name);
                  
           raise_application_error(-20015, 'Race track not found!');
+        WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_track_name=' || p_track_name
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END delete_track;
    
    
@@ -142,6 +158,14 @@ create or replace package body pkg_track is
                  ,p_api => gc_pkg_name || '.' || c_prc_name);
                  
            raise_application_error(-20015, 'Race track not found!');
+         WHEN OTHERS THEN
+            prc_log(p_log_type => 'E'
+                   ,p_message => SQLERRM
+                   ,p_backtrace => dbms_utility.format_error_backtrace
+                   ,p_parameters => 'p_track_name=' || p_track_name || ', p_country=' || p_country || ', p_layout=' || p_layout
+                   ,p_api => gc_pkg_name || '.' || c_prc_name);
+                   
+            raise_application_error(-20000, 'Unexpected error happened!');
    END edit_track;
 
 end pkg_track;
