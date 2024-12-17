@@ -136,10 +136,14 @@ COMMENT ON TABLE webpage_admin.race
 
 
 CREATE TABLE track(
-      track_id    NUMBER        NOT NULL
-     ,country     VARCHAR2(50)  NOT NULL
-     ,track_name  VARCHAR2(255) NOT NULL
-     ,layout_pic  VARCHAR2(255)
+      track_id             NUMBER        NOT NULL
+     ,country              VARCHAR2(50)  NOT NULL
+     ,track_name           VARCHAR2(255) NOT NULL
+     ,layout_pic           VARCHAR2(255)
+     ,modified_at          DATE            DEFAULT SYSDATE NOT NULL 
+     ,modified_by          varchar2(50)
+     ,created_at           DATE            DEFAULT SYSDATE NOT NULL  
+     ,created_by           varchar2(50)
 )TABLESPACE users;
 
 ALTER TABLE track
