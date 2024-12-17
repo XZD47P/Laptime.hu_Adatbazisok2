@@ -1,16 +1,62 @@
 CREATE OR REPLACE TRIGGER reg_user_trg
-  BEFORE INSERT ON reg_user
+  BEFORE INSERT OR UPDATE OR DELETE
+  ON reg_user
   FOR EACH ROW
 
 BEGIN
-  IF :new.user_id IS NULL
-  THEN
-    :new.user_id := user_seq.nextval;
+  IF INSERTING THEN
+    IF :new.user_id IS NULL
+    THEN
+      :new.user_id := user_seq.nextval;
+    END IF;
+
+    IF :new.user_role IS NULL
+      THEN
+        :new.user_role:= 'user';
+    END IF;
+    
+    :new.created_by:=sys_context('USERENV', 'OS_USER');
   END IF;
   
-  IF :new.user_role IS NULL
-    THEN
-      :new.user_role:= 'user';
+  
+  IF UPDATING THEN
+     INSERT INTO reg_user_h(user_id,dml_flag,first_name,last_name,
+                            email,password,fav_driver,fav_team,email_subscription,
+                            user_role,modified_by)
+     VALUES(:old.user_id
+           ,'U'
+           ,:old.first_name
+           ,:old.last_name
+           ,:old.email
+           ,:old.password
+           ,:old.fav_driver
+           ,:old.fav_team
+           ,:old.email_subscription
+           ,:old.user_role
+           ,sys_context('USERENV', 'OS_USER')
+           );
+     
+     :new.modified_at:= sysdate;
+     :new.modified_by:= sys_context('USERENV', 'OS_USER');  
+  END IF;
+  
+  
+  IF DELETING THEN
+    INSERT INTO reg_user_h(user_id,dml_flag,first_name,last_name,
+                            email,password,fav_driver,fav_team,email_subscription,
+                            user_role,modified_by)
+     VALUES(:old.user_id
+           ,'D'
+           ,:old.first_name
+           ,:old.last_name
+           ,:old.email
+           ,:old.password
+           ,:old.fav_driver
+           ,:old.fav_team
+           ,:old.email_subscription
+           ,:old.user_role
+           ,sys_context('USERENV', 'OS_USER')
+           );
   END IF;
 END reg_user_trg;
 /
