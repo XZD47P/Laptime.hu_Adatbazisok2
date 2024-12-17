@@ -22,7 +22,7 @@ BEGIN
   IF UPDATING THEN
      INSERT INTO reg_user_h(user_id,dml_flag,first_name,last_name,
                             email,password,fav_driver,fav_team,email_subscription,
-                            user_role,modified_by)
+                            user_role,modified_at,modified_by)
      VALUES(:old.user_id
            ,'U'
            ,:old.first_name
@@ -33,6 +33,7 @@ BEGIN
            ,:old.fav_team
            ,:old.email_subscription
            ,:old.user_role
+           ,:old.modified_at
            ,sys_context('USERENV', 'OS_USER')
            );
      
@@ -44,7 +45,7 @@ BEGIN
   IF DELETING THEN
     INSERT INTO reg_user_h(user_id,dml_flag,first_name,last_name,
                             email,password,fav_driver,fav_team,email_subscription,
-                            user_role,modified_by)
+                            user_role,modified_at,modified_by)
      VALUES(:old.user_id
            ,'D'
            ,:old.first_name
@@ -55,10 +56,12 @@ BEGIN
            ,:old.fav_team
            ,:old.email_subscription
            ,:old.user_role
+           ,:old.modified_at
            ,sys_context('USERENV', 'OS_USER')
            );
   END IF;
 END reg_user_trg;
+
 /
 CREATE OR REPLACE TRIGGER news_trg
   BEFORE INSERT OR UPDATE
@@ -162,6 +165,7 @@ BEGIN
                        wind_direction,
                        rain_percentage,
                        record_time,
+                       modified_at,
                        modified_by)
     VALUES(:old.race_id
           ,'U'
@@ -176,6 +180,7 @@ BEGIN
           ,:old.wind_direction
           ,:old.rain_percentage
           ,:old.record_time
+          ,:old.modified_at
           ,sys_context('USERENV', 'OS_USER'));
      
     :new.modified_at:=sysdate;
@@ -197,6 +202,7 @@ BEGIN
                        wind_direction,
                        rain_percentage,
                        record_time,
+                       modified_at,
                        modified_by)
     VALUES(:old.race_id
           ,'D'
@@ -211,6 +217,7 @@ BEGIN
           ,:old.wind_direction
           ,:old.rain_percentage
           ,:old.record_time
+          ,:old.modified_at
           ,sys_context('USERENV', 'OS_USER'));
   END IF;
 END race_trg;
