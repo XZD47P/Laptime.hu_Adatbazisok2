@@ -181,3 +181,43 @@ ALTER TABLE chatroom_messages
       
 COMMENT ON TABLE webpage_admin.chatroom_messages
         IS 'Messages sent by users in chatrooms'; 
+
+--History tables
+CREATE TABLE reg_user_h(
+       user_id         NUMBER         NOT NULL
+      ,dml_flag        CHAR(1)        NOT NULL
+      ,first_name      varchar2(30)   NOT NULL
+      ,last_name       varchar2(30)   NOT NULL
+      ,email           VARCHAR2(100)  NOT NULL
+      ,password        RAW(2000)      NOT NULL
+      ,fav_driver      varchar2(50)
+      ,fav_team        varchar2(50)
+      ,email_subscription NUMBER(1)
+      ,user_role       varchar2(10) DEFAULT 'user' NOT NULL 
+      ,modified_at     DATE         DEFAULT SYSDATE NOT NULL 
+      ,modified_by     varchar2(50)
+)TABLESPACE users;
+
+ALTER TABLE reg_user_h
+      ADD CONSTRAINT reg_user_h_pk PRIMARY KEY (user_id);
+      
+CREATE TABLE race_h(
+       race_id              NUMBER          NOT NULL
+      ,dml_flag             CHAR(1)         NOT NULL
+      ,motorsport_id        NUMBER          
+      ,title                VARCHAR2(255)   NOT NULL
+      ,track_id             NUMBER          
+      ,race_date_start      DATE            NOT NULL
+      ,race_date_end        DATE            NOT NULL
+      ,air_temperature      NUMBER
+      ,asp_temperature      NUMBER
+      ,wind_strength        NUMBER(5,2)
+      ,wind_direction       CHAR(2)
+      ,rain_percentage      NUMBER
+      ,record_time          NUMBER
+      ,modified_at          DATE            DEFAULT SYSDATE NOT NULL 
+      ,modified_by          varchar2(50)
+)TABLESPACE users;
+
+ALTER TABLE race_h
+      ADD CONSTRAINT race_h_pk PRIMARY KEY (race_id);
