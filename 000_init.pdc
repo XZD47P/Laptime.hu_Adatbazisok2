@@ -1,0 +1,188 @@
+PROMPT Building Database...
+
+----------------------------------
+-- 1. Create user, add grants   --
+----------------------------------
+PROMPT Creating user, adding necessary grants
+
+declare
+  cursor cur is
+    select 'alter system kill session ''' || sid || ',' || serial# || '''' as command
+      from v$session
+     where username = 'webpage_admin2';
+begin
+  for c in cur loop
+    EXECUTE IMMEDIATE c.command;
+  end loop;
+end;
+/
+
+DECLARE
+  v_count NUMBER;
+BEGIN
+  SELECT COUNT(*) INTO v_count FROM dba_users t WHERE t.username='WEBPAGE_ADMIN2';
+  IF v_count = 1 THEN 
+    EXECUTE IMMEDIATE 'DROP USER webpage_admin2 CASCADE';
+  END IF;
+END;
+/
+CREATE USER webpage_admin2 
+  IDENTIFIED BY "12345678" 
+  DEFAULT TABLESPACE users
+  QUOTA UNLIMITED ON users
+;
+
+grant CREATE TRIGGER to webpage_admin2;
+GRANT CREATE SESSION TO webpage_admin2;
+GRANT CREATE TABLE TO webpage_admin2;
+GRANT CREATE VIEW TO webpage_admin2;
+GRANT CREATE SEQUENCE TO webpage_admin2;
+GRANT CREATE PROCEDURE TO webpage_admin2;
+GRANT CREATE TYPE to webpage_admin2;
+GRANT EXECUTE ON SYS.DBMS_CRYPTO TO webpage_admin2;
+
+
+ALTER SESSION SET CURRENT_SCHEMA=webpage_admin2;
+
+PROMPT User created successfully!
+
+----------------------------------
+-- 2. Create tables   --
+----------------------------------
+PROMPT Creating tables...
+
+@01_create_tables.sql
+
+PROMPT Tables created!
+
+----------------------------------
+-- 3. Create table connections   --
+----------------------------------
+PROMPT Connecting tables...
+
+@03_connections.sql
+
+PROMPT Done!
+
+----------------------------------
+-- 4. Creating Sequences   --
+----------------------------------
+PROMPT Creating sequences for tables...
+
+@04_sequences.sql
+
+PROMPT Sequences created!
+
+----------------------------------
+-- 5. Creating Triggers   --
+----------------------------------
+PROMPT Creating triggers...
+
+@05_triggers.sql
+
+PROMPT Triggers successfully created!
+----------------------------------
+-- 6. Loading Data   --
+----------------------------------
+PROMPT Starting loading data...
+
+
+
+PROMPT Data Loaded!
+
+----------------------------------
+-- 7. Creating Packages/Functions/Procedures   --
+----------------------------------
+PROMPT Creating custom exceptions...
+
+create or replace package pkg_exception is
+
+       user_already_exists EXCEPTION;
+       PRAGMA EXCEPTION_INIT(user_already_exists, -20001);
+       
+       incorrect_password EXCEPTION;
+       PRAGMA EXCEPTION_INIT (incorrect_password, -20002);
+       
+       motorsport_already_exists EXCEPTION;
+       PRAGMA EXCEPTION_INIT(motorsport_already_exists, -20003);
+       
+       motorsport_not_found EXCEPTION;
+       PRAGMA EXCEPTION_INIT(motorsport_not_found, -20004);
+       
+       user_not_found EXCEPTION;
+       PRAGMA EXCEPTION_INIT(user_not_found, -20005);
+       
+       user_not_favourite_motorsport EXCEPTION;
+       PRAGMA EXCEPTION_INIT(user_not_favourite_motorsport, -20006);
+       
+       news_not_found EXCEPTION;
+       PRAGMA EXCEPTION_INIT(news_not_found, -20007);
+       
+       chatroom_already_exists EXCEPTION;
+       PRAGMA EXCEPTION_INIT(chatroom_already_exists, -20008);
+       
+       chatroom_not_found EXCEPTION;
+       PRAGMA EXCEPTION_INIT(chatroom_not_found, -20009);
+       
+       wrong_number_format EXCEPTION;
+       PRAGMA EXCEPTION_INIT(wrong_number_format,-20010);
+       
+       race_date_occupied EXCEPTION;
+       PRAGMA EXCEPTION_INIT(race_date_occupied, -20011);
+       
+       race_already_exists EXCEPTION;
+       PRAGMA EXCEPTION_INIT(race_already_exists, -20012);
+       
+       race_not_found EXCEPTION;
+       PRAGMA EXCEPTION_INIT(race_not_found, -20013);
+       
+       track_already_exists EXCEPTION;
+       PRAGMA EXCEPTION_INIT(track_already_exists, -20014);
+       
+       track_not_found EXCEPTION;
+       PRAGMA EXCEPTION_INIT(track_not_found, -20015);
+       
+       comment_not_found EXCEPTION;
+       PRAGMA EXCEPTION_INIT(comment_not_found, -20016);
+       
+end pkg_exception;
+/
+
+PROMPT Exceptions created!
+-------------------------------------
+PROMPT Creating functions...
+
+@fn_get_motorsport_id.fnc
+@fn_get_user_id.fnc
+@fn_time_to_milliseconds.fnc
+
+PROMPT Functions created!
+-------------------------------------
+PROMPT Creating procedures...
+
+@prc_log.prc
+@prc_send_message.prc
+
+PROMPT Procedures created!
+-------------------------------------
+PROMPT Creating packages...
+
+@pkg_chatroom.pck
+@pkg_cipher.pck
+@pkg_comment.pck
+@pkg_motorsport.pck
+@pkg_news.pck
+@pkg_race.pck
+@pkg_track.pck
+@pkg_user.pck
+
+PROMPT Packages created!
+----------------------------------
+-- 8. Creating Views   --
+----------------------------------
+PROMPT Creating Views...
+
+@views.sql
+
+PROMPT Views created successfully!
+PROMPT Database initalized successfully!

@@ -265,5 +265,5 @@ BEGIN
   END IF;
   :new.created_by := sys_context('USERENV', 'OS_USER');
 END trg_log;
-
+/
 
