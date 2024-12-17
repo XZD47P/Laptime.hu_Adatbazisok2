@@ -82,16 +82,7 @@ PROMPT Creating triggers...
 
 PROMPT Triggers successfully created!
 ----------------------------------
--- 6. Loading Data   --
-----------------------------------
-PROMPT Starting loading data...
-
-
-
-PROMPT Data Loaded!
-
-----------------------------------
--- 7. Creating Packages/Functions/Procedures   --
+-- 6. Creating Packages/Functions/Procedures   --
 ----------------------------------
 PROMPT Creating custom exceptions...
 
@@ -191,11 +182,19 @@ PROMPT Creating packages...
 
 PROMPT Packages created!
 ----------------------------------
--- 8. Creating Views   --
+-- 7. Creating Views   --
 ----------------------------------
 PROMPT Creating Views...
 
 @views.sql
 
 PROMPT Views created successfully!
+----------------------------------
+-- 8. Loading Data   --
+----------------------------------
+PROMPT Loading DATA into tables...
+
+@test_data.sql
+
+PROMPT Done!
 PROMPT Database initalized successfully! Please log in with webpage_admin.

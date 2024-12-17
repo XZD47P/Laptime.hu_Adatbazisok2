@@ -31,6 +31,7 @@ VALUES('Rally balesetek',(SELECT motorsport_id FROM motorsport WHERE motorsport_
 
 INSERT INTO chatroom(chatroom_name,motorsport_category)
 VALUES('24H of Le-Mans',(SELECT motorsport_id FROM motorsport WHERE motorsport_name=LOWER('wec')));
+/
 --Chatroom_messages
 BEGIN
 send_message(p_chatroom_name => 'Formula-1 igazolasok',
@@ -46,6 +47,7 @@ send_message(p_chatroom_name => 'Rally balesetek',
              p_message => 'Basszus az a pilóta mekkorát esett :O');
              
 END;
+/
 --Favored_motorsport
 BEGIN
   pkg_user.add_fav_motorsport(p_email => 'zoltan.kuti@gmail.com',
@@ -57,6 +59,7 @@ BEGIN
   pkg_user.add_fav_motorsport(p_email => 'zoltan.kuti@gmail.com',
                               p_motorsport => 'wrc');
 END;
+/
 --NEWS
 BEGIN
   pkg_news.add_news(p_email => 'zoltan.kuti@gmail.com',
@@ -74,6 +77,7 @@ BEGIN
                     p_title => 'Hir3',
                     p_description => 'Porsche nyerte a legutobbi versenyt');             
 END;
+/
 --news_comment
 BEGIN
   pkg_comment.post_comment(p_news_title => 'Hir1',
@@ -91,6 +95,7 @@ BEGIN
                            p_email => 'peter.hajdu@gmail.com',
                            p_comment => 'A Porsche mindig is a toppon volt.');
 END;
+/
 --track
 BEGIN
   pkg_track.add_track(p_track_name => 'Bahrain International Circuit',
@@ -109,6 +114,7 @@ BEGIN
                       p_country => 'France',
                       p_layout => '/Picture/le_mans.png');
 END;
+/
 --race
 BEGIN
   pkg_race.add_race(p_motorsport => 'formula-1',
@@ -159,5 +165,5 @@ BEGIN
                     p_wind_strenght => '',
                     p_rain_percent => '');
 END;
-
+/
 COMMIT;
