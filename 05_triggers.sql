@@ -105,13 +105,84 @@ BEGIN
 END chatroom_msq_trg;
 /
 CREATE OR REPLACE TRIGGER race_trg
-  BEFORE INSERT ON race
+  BEFORE INSERT OR UPDATE OR DELETE
+  ON race
   FOR EACH ROW
 
 BEGIN
-  IF :new.race_id IS NULL
-  THEN
-    :new.race_id := race_seq.nextval;
+  IF INSERTING THEN
+    IF :new.race_id IS NULL
+    THEN
+      :new.race_id := race_seq.nextval;
+    END IF;
+    :new.created_by:=sys_context('USERENV', 'OS_USER');
+  END IF;
+  
+  
+  IF UPDATING THEN
+    INSERT INTO race_h(race_id,
+                       dml_flag,
+                       motorsport_id,
+                       title,
+                       track_id,
+                       race_date_start,
+                       race_date_end,
+                       air_temperature,
+                       asp_temperature,
+                       wind_strength,
+                       wind_direction,
+                       rain_percentage,
+                       record_time,
+                       modified_by)
+    VALUES(:old.race_id
+          ,'U'
+          ,:old.motorsport_id
+          ,:old.title
+          ,:old.track_id
+          ,:old.race_date_start
+          ,:old.race_date_end
+          ,:old.air_temperature
+          ,:old.asp_temperature
+          ,:old.wind_strength
+          ,:old.wind_direction
+          ,:old.rain_percentage
+          ,:old.record_time
+          ,sys_context('USERENV', 'OS_USER'));
+     
+    :new.modified_at:=sysdate;
+    :new.modified_by:=sys_context('USERENV', 'OS_USER');                 
+  END IF;
+  
+  
+  IF DELETING THEN
+    INSERT INTO race_h(race_id,
+                       dml_flag,
+                       motorsport_id,
+                       title,
+                       track_id,
+                       race_date_start,
+                       race_date_end,
+                       air_temperature,
+                       asp_temperature,
+                       wind_strength,
+                       wind_direction,
+                       rain_percentage,
+                       record_time,
+                       modified_by)
+    VALUES(:old.race_id
+          ,'D'
+          ,:old.motorsport_id
+          ,:old.title
+          ,:old.track_id
+          ,:old.race_date_start
+          ,:old.race_date_end
+          ,:old.air_temperature
+          ,:old.asp_temperature
+          ,:old.wind_strength
+          ,:old.wind_direction
+          ,:old.rain_percentage
+          ,:old.record_time
+          ,sys_context('USERENV', 'OS_USER'));
   END IF;
 END race_trg;
 /
