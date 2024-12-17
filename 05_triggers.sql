@@ -61,39 +61,68 @@ BEGIN
 END reg_user_trg;
 /
 CREATE OR REPLACE TRIGGER news_trg
-  BEFORE INSERT ON news
+  BEFORE INSERT OR UPDATE
+  ON news
   FOR EACH ROW
 
 BEGIN
-  IF :new.news_id IS NULL
-  THEN
-    :new.news_id := news_seq.nextval;
+  IF INSERTING THEN
+    IF :new.news_id IS NULL
+    THEN
+      :new.news_id := news_seq.nextval;
+    END IF;
+    
+    :new.created_by:=sys_context('USERENV', 'OS_USER');
+  END IF;
+  
+  IF UPDATING THEN
+     :new.modified_at:= sysdate;
+     :new.modified_by:= sys_context('USERENV', 'OS_USER');    
   END IF;
 END news_trg;
 /
 CREATE OR REPLACE TRIGGER motorsport_trg
-  BEFORE INSERT ON motorsport
+  BEFORE INSERT OR UPDATE
+  ON motorsport
   FOR EACH ROW
 
 BEGIN
-  IF :new.motorsport_id IS NULL
-  THEN
-    :new.motorsport_id := motorsport_seq.nextval;
+  IF INSERTING THEN
+    IF :new.motorsport_id IS NULL
+    THEN
+      :new.motorsport_id := motorsport_seq.nextval;
+    END IF;
+    
+    :new.created_by:=sys_context('USERENV', 'OS_USER');
+  END IF;
+      
+  IF UPDATING THEN
+    :new.modified_at:= sysdate;
+    :new.modified_by:= sys_context('USERENV', 'OS_USER');
   END IF;
 END motorsport_trg;
 /
 CREATE OR REPLACE TRIGGER chatroom_trg
-  BEFORE INSERT ON chatroom
+  BEFORE INSERT OR UPDATE
+  ON chatroom
   FOR EACH ROW
 
 BEGIN
-  IF :new.chatroom_id IS NULL
-  THEN
-    :new.chatroom_id := chatroom_seq.nextval;
+  IF INSERTING THEN
+    IF :new.chatroom_id IS NULL
+    THEN
+      :new.chatroom_id := chatroom_seq.nextval;
+    END IF;
+    :new.created_by:=sys_context('USERENV', 'OS_USER');
+  END IF;
+  
+  IF UPDATING THEN
+    :new.modified_at:= sysdate;
+    :new.modified_by:= sys_context('USERENV', 'OS_USER');
   END IF;
 END chatroom_trg;
 /
-CREATE OR REPLACE TRIGGER chatroom_msq_trg
+CREATE OR REPLACE TRIGGER chatroom_msg_trg
   BEFORE INSERT ON chatroom_messages
   FOR EACH ROW
 
@@ -198,13 +227,23 @@ BEGIN
 END news_comment_trg;
 /
 CREATE OR REPLACE TRIGGER track_trg
-  BEFORE INSERT ON track
+  BEFORE INSERT OR UPDATE
+  ON track
   FOR EACH ROW
 
 BEGIN
-  IF :new.track_id IS NULL
-  THEN
-    :new.track_id := track_seq.nextval;
+  IF INSERTING THEN
+    IF :new.track_id IS NULL
+    THEN
+      :new.track_id := track_seq.nextval;
+    END IF;
+    
+    :new.created_by:=sys_context('USERENV', 'OS_USER');
+  END IF;
+  
+  IF UPDATING THEN
+    :new.modified_at:=sysdate;
+    :new.modified_by:=sys_context('USERENV', 'OS_USER');
   END IF;
 END track_trg;
 /
