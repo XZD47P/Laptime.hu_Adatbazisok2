@@ -79,8 +79,6 @@ CREATE TABLE news_comment(
       ,u_id           NUMBER         
       ,news_id        NUMBER         NOT NULL
       ,n_comment      VARCHAR2(255)  NOT NULL
-      ,modified_at    DATE         DEFAULT SYSDATE NOT NULL 
-      ,modified_by    varchar2(50)
       ,created_at     DATE         DEFAULT SYSDATE NOT NULL  
       ,created_by     varchar2(50)
 ) TABLESPACE users;
