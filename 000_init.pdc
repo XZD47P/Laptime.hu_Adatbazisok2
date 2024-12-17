@@ -197,4 +197,14 @@ PROMPT Loading DATA into tables...
 @test_data.sql
 
 PROMPT Done!
+----------------------------------
+-- 9. Creating type   --
+----------------------------------
+PROMPT Creating type ty_chatroom_activity
+
+@09_ty_chatroom_activity.typ
+@09_ty_chatroom_activity_l.tps
+@09_fn_get_chatroom_activity.fnc
+
+PROMPT Done!
 PROMPT Database initalized successfully! Please log in with webpage_admin.
