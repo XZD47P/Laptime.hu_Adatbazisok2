@@ -10,9 +10,10 @@ FROM reg_user r
 WHERE r.email_subscription=1;
 /
 CREATE OR REPLACE VIEW vw_races_in_countries AS
-SELECT t.country, r.title, m.motorsport_name
+SELECT t.country, r.title, m.motorsport_name, r.race_date_start, r.race_date_end
 FROM race r INNER JOIN track t ON r.track_id=t.track_id
-            INNER JOIN motorsport m ON r.motorsport_id=m.motorsport_id;
+            INNER JOIN motorsport m ON r.motorsport_id=m.motorsport_id
+ORDER BY t.country DESC;
 /
 CREATE OR REPLACE VIEW vw_errors AS
 SELECT *
