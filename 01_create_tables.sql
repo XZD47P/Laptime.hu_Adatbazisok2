@@ -7,7 +7,9 @@ CREATE TABLE reg_user(
       ,fav_driver      varchar2(50)
       ,fav_team        varchar2(50)
       ,email_subscription NUMBER(1)
-      ,user_role       varchar2(10) DEFAULT 'user' NOT NULL 
+      ,user_role       varchar2(10) DEFAULT 'user' NOT NULL
+      ,dml_flag        CHAR(1)
+      ,version         NUMBER 
       ,modified_at     DATE         DEFAULT SYSDATE NOT NULL 
       ,modified_by     varchar2(50)
       ,created_at      DATE         DEFAULT SYSDATE NOT NULL  
@@ -30,6 +32,8 @@ COMMENT ON TABLE webpage_admin.reg_user
 CREATE TABLE motorsport(
        motorsport_id   NUMBER   NOT NULL
       ,motorsport_name  varchar2(20) NOT NULL
+      ,dml_flag        CHAR(1)  
+      ,version         NUMBER 
       ,modified_at     DATE         DEFAULT SYSDATE NOT NULL 
       ,modified_by     varchar2(50)
       ,created_at      DATE         DEFAULT SYSDATE NOT NULL  
@@ -46,8 +50,6 @@ COMMENT ON TABLE webpage_admin.motorsport
 CREATE TABLE favored_motorsport(
        u_id             NUMBER    NOT NULL
       ,motorsport_id    NUMBER    NOT NULL
-      ,modified_at      DATE         DEFAULT SYSDATE NOT NULL 
-      ,modified_by      varchar2(50)
       ,created_at       DATE         DEFAULT SYSDATE NOT NULL  
       ,created_by       varchar2(50)
 ) TABLESPACE users;
@@ -66,6 +68,8 @@ CREATE TABLE news(
       ,news_description       NCLOB        NOT NULL
       ,motorsport_category    NUMBER       
       ,published              NUMBER(1)    DEFAULT 0 NOT NULL
+      ,dml_flag               CHAR(1)
+      ,version                NUMBER 
       ,modified_at            DATE         DEFAULT SYSDATE NOT NULL 
       ,modified_by            varchar2(50)
       ,created_at             DATE         DEFAULT SYSDATE NOT NULL  
@@ -98,7 +102,9 @@ COMMENT ON TABLE webpage_admin.news_comment
 CREATE TABLE chatroom(
        chatroom_id      NUMBER          NOT NULL
       ,chatroom_name    VARCHAR2(50)    NOT NULL
-      ,motorsport_category NUMBER       
+      ,motorsport_category NUMBER
+      ,dml_flag        CHAR(1)
+      ,version         NUMBER        
       ,modified_at      DATE            DEFAULT SYSDATE NOT NULL 
       ,modified_by      varchar2(50)
       ,created_at       DATE            DEFAULT SYSDATE NOT NULL  
@@ -125,6 +131,8 @@ CREATE TABLE race(
       ,wind_direction       CHAR(2)
       ,rain_percentage      NUMBER
       ,record_time          NUMBER
+      ,dml_flag             CHAR(1)
+      ,version              NUMBER 
       ,modified_at          DATE            DEFAULT SYSDATE NOT NULL 
       ,modified_by          varchar2(50)
       ,created_at           DATE            DEFAULT SYSDATE NOT NULL  
@@ -143,6 +151,8 @@ CREATE TABLE track(
      ,country              VARCHAR2(50)  NOT NULL
      ,track_name           VARCHAR2(255) NOT NULL
      ,layout_pic           VARCHAR2(255)
+     ,dml_flag             CHAR(1)
+     ,version              NUMBER 
      ,modified_at          DATE            DEFAULT SYSDATE NOT NULL 
      ,modified_by          varchar2(50)
      ,created_at           DATE            DEFAULT SYSDATE NOT NULL  
@@ -193,6 +203,7 @@ COMMENT ON TABLE webpage_admin.chatroom_messages
 CREATE TABLE reg_user_h(
        user_id         NUMBER         NOT NULL
       ,dml_flag        CHAR(1)        NOT NULL
+      ,version         NUMBER         NOT NULL
       ,first_name      varchar2(30)   NOT NULL
       ,last_name       varchar2(30)   NOT NULL
       ,email           VARCHAR2(100)  NOT NULL
@@ -208,6 +219,7 @@ CREATE TABLE reg_user_h(
 CREATE TABLE race_h(
        race_id              NUMBER          NOT NULL
       ,dml_flag             CHAR(1)         NOT NULL
+      ,version              NUMBER          NOT NULL
       ,motorsport_id        NUMBER          
       ,title                VARCHAR2(255)   NOT NULL
       ,track_id             NUMBER          

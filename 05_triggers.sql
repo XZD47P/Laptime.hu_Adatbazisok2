@@ -1,5 +1,5 @@
 CREATE OR REPLACE TRIGGER reg_user_trg
-  BEFORE INSERT OR UPDATE OR DELETE
+  BEFORE INSERT OR UPDATE
   ON reg_user
   FOR EACH ROW
 
@@ -15,53 +15,67 @@ BEGIN
         :new.user_role:= 'user';
     END IF;
     
+    :new.dml_flag:='I';
+    :new.version:=1;
     :new.created_by:=sys_context('USERENV', 'OS_USER');
   END IF;
   
   
   IF UPDATING THEN
-     INSERT INTO reg_user_h(user_id,dml_flag,first_name,last_name,
-                            email,password,fav_driver,fav_team,email_subscription,
-                            user_role,modified_at,modified_by)
-     VALUES(:old.user_id
-           ,'U'
-           ,:old.first_name
-           ,:old.last_name
-           ,:old.email
-           ,:old.password
-           ,:old.fav_driver
-           ,:old.fav_team
-           ,:old.email_subscription
-           ,:old.user_role
-           ,:old.modified_at
-           ,sys_context('USERENV', 'OS_USER')
-           );
      
+     :new.dml_flag:='U';
+     :new.version:=:old.version+1;
      :new.modified_at:= sysdate;
      :new.modified_by:= sys_context('USERENV', 'OS_USER');  
   END IF;
   
+END reg_user_trg;
+/
+create or replace trigger reg_user_h_trg
+  after update or delete
+  on reg_user 
+  for each row
+
+begin
+  IF UPDATING THEN
+    INSERT INTO reg_user_h(user_id,dml_flag,first_name,last_name,
+                            email,password,fav_driver,fav_team,email_subscription,
+                            user_role,modified_at,modified_by,version)
+     VALUES(:new.user_id
+           ,'U'
+           ,:new.first_name
+           ,:new.last_name
+           ,:new.email
+           ,:new.password
+           ,:new.fav_driver
+           ,:new.fav_team
+           ,:new.email_subscription
+           ,:new.user_role
+           ,:new.modified_at
+           ,sys_context('USERENV', 'OS_USER')
+           ,:new.version
+           );
+  END IF;
   
   IF DELETING THEN
     INSERT INTO reg_user_h(user_id,dml_flag,first_name,last_name,
                             email,password,fav_driver,fav_team,email_subscription,
-                            user_role,modified_at,modified_by)
-     VALUES(:old.user_id
-           ,'D'
-           ,:old.first_name
-           ,:old.last_name
-           ,:old.email
-           ,:old.password
-           ,:old.fav_driver
-           ,:old.fav_team
-           ,:old.email_subscription
-           ,:old.user_role
-           ,:old.modified_at
-           ,sys_context('USERENV', 'OS_USER')
-           );
+                            user_role,modified_at,modified_by,version)
+    VALUES(:old.user_id
+          ,'D'
+          ,:old.first_name
+          ,:old.last_name
+          ,:old.email
+          ,:old.password
+          ,:old.fav_driver
+          ,:old.fav_team
+          ,:old.email_subscription
+          ,:old.user_role
+          ,:old.modified_at
+          ,sys_context('USERENV', 'OS_USER')
+          ,:old.version);
   END IF;
-END reg_user_trg;
-
+end reg_user_h_trg;
 /
 CREATE OR REPLACE TRIGGER news_trg
   BEFORE INSERT OR UPDATE
@@ -139,7 +153,7 @@ BEGIN
 END chatroom_msq_trg;
 /
 CREATE OR REPLACE TRIGGER race_trg
-  BEFORE INSERT OR UPDATE OR DELETE
+  BEFORE INSERT OR UPDATE
   ON race
   FOR EACH ROW
 
@@ -150,10 +164,28 @@ BEGIN
       :new.race_id := race_seq.nextval;
     END IF;
     :new.title:=UPPER(:new.title);
+    :new.dml_flag:='I';
+    :new.version:=1;
     :new.created_by:=sys_context('USERENV', 'OS_USER');
   END IF;
   
   
+  IF UPDATING THEN
+    :new.dml_flag:='U';
+    :new.version:=:old.version+1;
+    :new.modified_at:=sysdate;
+    :new.modified_by:=sys_context('USERENV', 'OS_USER');                 
+  END IF;
+  
+END race_trg;
+
+/
+create or replace trigger race_h_trg
+  after update or delete
+  on race 
+  for each row
+
+begin
   IF UPDATING THEN
     INSERT INTO race_h(race_id,
                        dml_flag,
@@ -169,25 +201,24 @@ BEGIN
                        rain_percentage,
                        record_time,
                        modified_at,
-                       modified_by)
-    VALUES(:old.race_id
+                       modified_by,
+                       version)
+    VALUES(:new.race_id
           ,'U'
-          ,:old.motorsport_id
-          ,:old.title
-          ,:old.track_id
-          ,:old.race_date_start
-          ,:old.race_date_end
-          ,:old.air_temperature
-          ,:old.asp_temperature
-          ,:old.wind_strength
-          ,:old.wind_direction
-          ,:old.rain_percentage
-          ,:old.record_time
-          ,:old.modified_at
-          ,sys_context('USERENV', 'OS_USER'));
-     
-    :new.modified_at:=sysdate;
-    :new.modified_by:=sys_context('USERENV', 'OS_USER');                 
+          ,:new.motorsport_id
+          ,:new.title
+          ,:new.track_id
+          ,:new.race_date_start
+          ,:new.race_date_end
+          ,:new.air_temperature
+          ,:new.asp_temperature
+          ,:new.wind_strength
+          ,:new.wind_direction
+          ,:new.rain_percentage
+          ,:new.record_time
+          ,:new.modified_at
+          ,sys_context('USERENV', 'OS_USER')
+          ,:new.version);
   END IF;
   
   
@@ -206,7 +237,8 @@ BEGIN
                        rain_percentage,
                        record_time,
                        modified_at,
-                       modified_by)
+                       modified_by,
+                       version)
     VALUES(:old.race_id
           ,'D'
           ,:old.motorsport_id
@@ -221,9 +253,10 @@ BEGIN
           ,:old.rain_percentage
           ,:old.record_time
           ,:old.modified_at
-          ,sys_context('USERENV', 'OS_USER'));
+          ,sys_context('USERENV', 'OS_USER'),
+          :old.version+1);
   END IF;
-END race_trg;
+end race_h_trg;
 /
 CREATE OR REPLACE TRIGGER news_comment_trg
   BEFORE INSERT ON news_comment
