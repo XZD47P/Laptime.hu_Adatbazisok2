@@ -88,15 +88,19 @@ BEGIN
     THEN
       :new.news_id := news_seq.nextval;
     END IF;
-    
+    :new.dml_flag:='I';
+    :new.version:=1;
     :new.created_by:=sys_context('USERENV', 'OS_USER');
   END IF;
   
   IF UPDATING THEN
+     :new.dml_flag:='U';
+     :new.version:=:old.version+1;
      :new.modified_at:= sysdate;
      :new.modified_by:= sys_context('USERENV', 'OS_USER');    
   END IF;
 END news_trg;
+
 /
 CREATE OR REPLACE TRIGGER motorsport_trg
   BEFORE INSERT OR UPDATE
@@ -109,15 +113,21 @@ BEGIN
     THEN
       :new.motorsport_id := motorsport_seq.nextval;
     END IF;
+    
     :new.motorsport_name:=LOWER(:new.motorsport_name);
+    :new.dml_flag:='I';
+    :new.version:=1;
     :new.created_by:=sys_context('USERENV', 'OS_USER');
   END IF;
       
   IF UPDATING THEN
+    :new.dml_flag:='U';
+    :new.version:=:old.version+1;
     :new.modified_at:= sysdate;
     :new.modified_by:= sys_context('USERENV', 'OS_USER');
   END IF;
 END motorsport_trg;
+
 /
 CREATE OR REPLACE TRIGGER chatroom_trg
   BEFORE INSERT OR UPDATE
@@ -130,11 +140,15 @@ BEGIN
     THEN
       :new.chatroom_id := chatroom_seq.nextval;
     END IF;
+    :new.dml_flag:='I';
+    :new.version:=1;
     :new.chatroom_name:=LOWER(:new.chatroom_name);
     :new.created_by:=sys_context('USERENV', 'OS_USER');
   END IF;
   
   IF UPDATING THEN
+    :new.dml_flag:='U';
+    :new.version:=:old.version+1;
     :new.modified_at:= sysdate;
     :new.modified_by:= sys_context('USERENV', 'OS_USER');
   END IF;
@@ -280,15 +294,19 @@ BEGIN
     THEN
       :new.track_id := track_seq.nextval;
     END IF;
-    
+    :new.dml_flag:='I';
+    :new.version:=1;
     :new.created_by:=sys_context('USERENV', 'OS_USER');
   END IF;
   
   IF UPDATING THEN
+    :new.dml_flag:='U';
+    :new.version:=:old.version+1;
     :new.modified_at:=sysdate;
     :new.modified_by:=sys_context('USERENV', 'OS_USER');
   END IF;
 END track_trg;
+
 /
 CREATE OR REPLACE TRIGGER trg_log
   BEFORE INSERT ON database_log
